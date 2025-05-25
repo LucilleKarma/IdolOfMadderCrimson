@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 
@@ -14,6 +14,12 @@ public class BridgeGenerationSettings
         get
         {
             /*
+             * The height of a bridge's arch is defined by the following equation: round(height * abs(sin(pi * x / width)))
+             * Beams should be generated at points where this equation is sufficiently low, aka at a point where the arch is at its
+             * base. Represented mathematically, this is asking where the above height equation is less than some height value.
+             * For the sake of demonstration, a value of one will be used as the "sufficiently low" cutoff.
+             * The following reductions exist to explain the process that lead to the math math below.
+             * 
                 round(height * abs(sin(pi * x / width))) < 1
                 height * abs(sin(pi * x / width)) < 1
                 abs(sin(pi * x / width)) < 1 / height
@@ -24,8 +30,11 @@ public class BridgeGenerationSettings
              */
 
             // For a bit of artistic preference, 0.5 will be used instead of 1 like in the original equation, making the beams a bit thinner.
-            float intermediateArcsine = MathF.Asin(0.5f / BridgeArchHeight);
+            float beamThicknessCoefficient = 0.5f;
+            float intermediateArcsine = MathF.Asin(beamThicknessCoefficient / BridgeArchHeight);
             int beamWidth = (int)MathF.Round(intermediateArcsine * BridgeArchWidth / MathHelper.Pi);
+
+            // Account for the case in which the bridge is perfectly flat, wherein the above calculations would result in a division by zero.
             if (BridgeArchHeight == 0)
                 beamWidth = BridgeArchWidth / 33;
 
