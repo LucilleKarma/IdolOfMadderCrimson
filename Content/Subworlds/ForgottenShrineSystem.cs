@@ -1,19 +1,14 @@
-﻿using IdolOfMadderCrimson.Content.NPCs;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using IdolOfMadderCrimson.Content.Subworlds.Generation;
 using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.NPCs.Bosses.Avatar.SecondPhaseForm;
-using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.GlobalInstances;
-using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.Graphics.UI;
 using NoxusBoss.Core.Utilities;
 using SubworldLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.Localization;
@@ -95,7 +90,7 @@ public class ForgottenShrineSystem : ModSystem
 
     private bool MakeShrineUnbreakable(int x, int y, int type) => SubworldSystem.IsActive<ForgottenShrineSubworld>();
 
-    private string UseWeatherText(string originalText)
+    private string? UseWeatherText(string originalText)
     {
         if (WasInSubworldLastFrame)
         {
@@ -108,7 +103,7 @@ public class ForgottenShrineSystem : ModSystem
         return null;
     }
 
-    private string UseMoonNotFoundText(string originalText)
+    private string? UseMoonNotFoundText(string originalText)
     {
         if (WasInSubworldLastFrame)
             return Language.GetTextValue("GameUI.WaningCrescent");
@@ -116,7 +111,7 @@ public class ForgottenShrineSystem : ModSystem
         return null;
     }
 
-    private string UseParsecsPositionTextX(string originalText)
+    private string? UseParsecsPositionTextX(string originalText)
     {
         if (WasInSubworldLastFrame)
             return Language.GetText($"Mods.NoxusBoss.CellPhoneInfoOverrides.ParsecText").Format($"{HorizontalDistanceParsecs:n0}");
@@ -124,7 +119,7 @@ public class ForgottenShrineSystem : ModSystem
         return null;
     }
 
-    private string UseParsecsPositionTextY(string originalText)
+    private string? UseParsecsPositionTextY(string originalText)
     {
         if (WasInSubworldLastFrame)
             return Language.GetText($"Mods.NoxusBoss.CellPhoneInfoOverrides.ParsecText").Format($"{VerticalDistanceParsecs:n0}");
@@ -145,23 +140,6 @@ public class ForgottenShrineSystem : ModSystem
         if (!WasInSubworldLastFrame)
             return;
 
-        // TODO -- Remove later.
-
-       // bool summonTheHorde = Main.LocalPlayer.name != "ModTester2" && Main.LocalPlayer.name != "Lucille";
-        //if (summonTheHorde)
-        //{
-        //    EmptinessSprayPlayerDeletionSystem.PlayerWasDeletedByNamelessDeity = true;
-         //   EmptinessSprayPlayerDeletionSystem.PlayerWasDeleted = true;
-        //}
-        /*
-        if (summonTheHorde && Main.rand.NextBool(60))
-            if (Main.rand.NextBool(2))
-            {
-                NPC.NewNPC(new EntitySource_WorldEvent(), (int)Main.LocalPlayer.Center.X, (int)Main.LocalPlayer.Center.Y - 400, ModContent.NPCType<AvatarOfEmptiness>());
-            }
-            else
-                NPC.NewNPC(new EntitySource_WorldEvent(), (int)Main.LocalPlayer.Center.X, (int)Main.LocalPlayer.Center.Y - 400, ModContent.NPCType<NamelessDeityBoss>());
-        */
         EnableBackground();
         Main.time = Main.nightLength * 0.71;
         Main.dayTime = false;

@@ -7,9 +7,17 @@ public abstract class BaseParticle : IPooledParticle
 {
     protected static T GetNewParticle<T>() where T : BaseParticle, new() => new T();
 
-    public bool IsRestingInPool { get; private set; }
+    public bool IsRestingInPool
+    {
+        get;
+        private set;
+    }
 
-    public bool ShouldBeRemovedFromRenderer { get; protected set; }
+    public bool ShouldBeRemovedFromRenderer
+    {
+        get;
+        protected set;
+    }
 
     public virtual void FetchFromPool()
     {

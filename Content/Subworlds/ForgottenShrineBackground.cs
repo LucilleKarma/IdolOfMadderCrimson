@@ -1,4 +1,5 @@
-﻿using IdolOfMadderCrimson.Common.Graphics;
+﻿using System;
+using IdolOfMadderCrimson.Common.Graphics;
 using Luminance.Assets;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
@@ -12,7 +13,6 @@ using NoxusBoss.Core.Graphics.FastParticleSystems;
 using NoxusBoss.Core.Graphics.UI.GraphicalUniverseImager;
 using NoxusBoss.Core.Utilities;
 using ReLogic.Content;
-using System;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
@@ -360,7 +360,7 @@ public class ForgottenShrineBackground : Background
                 lanternSystem?.CreateNew(spawnPosition, velocity, Vector2.One * size, new Color(255, Main.rand.Next(40, 150), 33) * 0.75f, pathInterpolant);
             }
         }
-        lanternSystem.UpdateAll();
+        lanternSystem?.UpdateAll();
 
         LanternsCanSpawn = true;
         LanternSpeed = MathHelper.Lerp(LanternSpeed, 1f, 0.04f).StepTowards(1f, 0.01f);

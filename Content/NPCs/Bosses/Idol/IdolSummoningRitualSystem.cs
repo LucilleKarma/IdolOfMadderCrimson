@@ -1,8 +1,8 @@
-﻿using Luminance.Core.Graphics;
+﻿using System.IO;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core.SoundSystems;
 using NoxusBoss.Core.Utilities;
-using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -85,6 +85,9 @@ public partial class IdolSummoningRitualSystem : ModSystem
         UpdateLoopSound(HarshWindSoundInstance, HarshWindSoundVolume);
     }
 
+    /// <summary>
+    ///     Updates a given looped sound for this system.
+    /// </summary>
     private static void UpdateLoopSound(LoopedSoundInstance? sound, float volume)
     {
         if (sound is null)
