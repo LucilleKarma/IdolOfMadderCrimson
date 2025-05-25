@@ -72,7 +72,7 @@ public class ForgottenShrineSubworld : Subworld
         return false;
     }
 
-    public static TagCompound SafeWorldDataToTag(string suffix, bool saveInCentralRegistry = true)
+    public static TagCompound SaveWorldDataToTag(string suffix, bool saveInCentralRegistry = true)
     {
         // Re-initialize the save data tag.
         TagCompound savedWorldData = [];
@@ -121,11 +121,11 @@ public class ForgottenShrineSubworld : Subworld
         CommonCalamityVariables.LoadDefeatStates(savedWorldData);
     }
 
-    public override void CopyMainWorldData() => SafeWorldDataToTag("Main");
+    public override void CopyMainWorldData() => SaveWorldDataToTag("Main");
 
     public override void ReadCopiedMainWorldData() => LoadWorldDataFromTag("Main");
 
-    public override void CopySubworldData() => SafeWorldDataToTag("Subworld");
+    public override void CopySubworldData() => SaveWorldDataToTag("Subworld");
 
     public override void ReadCopiedSubworldData() => LoadWorldDataFromTag("Subworld");
 }
