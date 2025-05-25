@@ -14,7 +14,7 @@ public class FramedFastParticleSystem(int totalFrames, int maxParticles, Action 
     FastParticleSystem(maxParticles, renderPreparations, extraUpdates)
 {
     /// <summary>
-    /// The amount of frames this particle has.
+    ///     The amount of frames this particle has.
     /// </summary>
     public readonly int TotalFrames = totalFrames;
 

@@ -12,12 +12,12 @@ public class BaseBridgePass : GenPass
     private static BridgeSetGenerator bridgeGenerator;
 
     /// <summary>
-    /// The width of each bridge in the set.
+    ///     The width of each bridge in the set.
     /// </summary>
     public const int BridgeWidth = 84;
 
     /// <summary>
-    /// The manager used by the bridge generation algorithm.
+    ///     The manager used by the bridge generation algorithm.
     /// </summary>
     public static BridgeSetGenerator BridgeGenerator
     {
@@ -26,7 +26,7 @@ public class BaseBridgePass : GenPass
     }
 
     /// <summary>
-    /// The settings for the bridge generator.
+    ///     The settings for the bridge generator.
     /// </summary>
     public static readonly BridgeGenerationSettings GenerationSettings = new BridgeGenerationSettings()
     {
@@ -80,7 +80,7 @@ public class BaseBridgePass : GenPass
     }
 
     /// <summary>
-    /// Places candles along the bridge.
+    ///     Places candles along the bridge.
     /// </summary>
     internal static void CreateCandles()
     {

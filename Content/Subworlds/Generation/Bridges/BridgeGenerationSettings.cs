@@ -7,7 +7,7 @@ namespace IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 public class BridgeGenerationSettings
 {
     /// <summary>
-    /// The width of beams for the bridge before the shrine.
+    ///     The width of beams for the bridge before the shrine.
     /// </summary>
     public int BridgeBeamWidth
     {
@@ -43,67 +43,67 @@ public class BridgeGenerationSettings
     }
 
     /// <summary>
-    /// The height of beams for the bridge before the shrine.
+    ///     The height of beams for the bridge before the shrine.
     /// </summary>
     public int BridgeBeamHeight;
 
     /// <summary>
-    /// The width of arches on the bridge.
+    ///     The width of arches on the bridge.
     /// </summary>
     public int BridgeArchWidth;
 
     /// <summary>
-    /// The amount of horizontal coverage that ropes underneath the bridge have, in tile coordinates.
+    ///     The amount of horizontal coverage that ropes underneath the bridge have, in tile coordinates.
     /// </summary>
     public int BridgeUndersideRopeWidth;
 
     /// <summary>
-    /// The amount of vertical coverage that ropes beneath the bridge should have due to sag, in tile coordinates.
+    ///     The amount of vertical coverage that ropes beneath the bridge should have due to sag, in tile coordinates.
     /// </summary>
     public int BridgeUndersideRopeSag;
 
     /// <summary>
-    /// The maximum height of arches on the bridge.
+    ///     The maximum height of arches on the bridge.
     /// </summary>
     public int BridgeArchHeight;
 
     /// <summary>
-    /// The factor by which arches are exaggerated for big bridges with a rooftop.
+    ///     The factor by which arches are exaggerated for big bridges with a rooftop.
     /// </summary>
     public float BridgeArchHeightBigBridgeFactor;
 
     /// <summary>
-    /// The vertical thickness of the bridge.
+    ///     The vertical thickness of the bridge.
     /// </summary>
     public int BridgeThickness;
 
     /// <summary>
-    /// The amount of bridges it takes on a cyclical basis in order for a bridge to be created with a roof.
+    ///     The amount of bridges it takes on a cyclical basis in order for a bridge to be created with a roof.
     /// </summary>
     public int BridgeRooftopsPerBridge;
 
     /// <summary>
-    /// The amount of vertical space taken up by bottom of rooftops.
+    ///     The amount of vertical space taken up by bottom of rooftops.
     /// </summary>
     public int BridgeRooftopDynastyWoodLayerHeight;
 
     /// <summary>
-    /// The amount of vertical space dedicated to walls above pillars but below rooftops.
+    ///     The amount of vertical space dedicated to walls above pillars but below rooftops.
     /// </summary>
     public int BridgeRoofWallUndersideHeight;
 
     /// <summary>
-    /// The baseline height of walls behind the bridge. Determines things such as how high rooftops are as a baseline.
+    ///     The baseline height of walls behind the bridge. Determines things such as how high rooftops are as a baseline.
     /// </summary>
     public int BridgeBackWallHeight;
 
     /// <summary>
-    /// The width of the dock.
+    ///     The width of the dock.
     /// </summary>
     public int DockWidth;
 
     /// <summary>
-    /// The set of possible rooftops that can be selected for a given roof on the bridge.
+    ///     The set of possible rooftops that can be selected for a given roof on the bridge.
     /// </summary>
     public List<ShrineRooftopSet> BridgeRooftopConfigurations = new List<ShrineRooftopSet>();
 }

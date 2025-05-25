@@ -5,7 +5,7 @@ namespace IdolOfMadderCrimson.Content.NPCs.Bosses.Idol;
 public partial class IdolSummoningRitualSystem : ModSystem
 {
     /// <summary>
-    /// The intensity of rumbles created by this ritual.
+    ///     The intensity of rumbles created by this ritual.
     /// </summary>
     public float RumbleInterpolant
     {

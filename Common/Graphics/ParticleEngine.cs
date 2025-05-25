@@ -8,7 +8,7 @@ namespace IdolOfMadderCrimson.Common.Graphics;
 public class ParticleEngine : ILoadable
 {
     /// <summary>
-    /// Renders over dusts.
+    ///     Renders over dusts.
     /// </summary>
     public static readonly ParticleRenderer Particles = new ParticleRenderer();
     public static readonly ParticleRenderer ShaderParticles = new ParticleRenderer();

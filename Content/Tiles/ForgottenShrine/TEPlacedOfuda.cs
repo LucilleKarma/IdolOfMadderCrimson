@@ -73,7 +73,7 @@ public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
     }
 
     /// <summary>
-    /// Renders this ofuda.
+    ///     Renders this ofuda.
     /// </summary>
     public void Render()
     {

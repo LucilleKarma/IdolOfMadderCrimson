@@ -60,7 +60,7 @@ public class Rope
     private int accuracy;
 
     /// <summary>
-    /// Calculates the overall segment length of a rope based on the horizontal span between its two end points and a desired sag distance.
+    ///     Calculates the overall segment length of a rope based on the horizontal span between its two end points and a desired sag distance.
     /// </summary>
     public static float CalculateSegmentLength(float ropeSpan, float sag)
     {
@@ -91,11 +91,11 @@ public class Rope
     }
 
     /// <summary>
-    /// Searches for an approximate for a root of a given function.
+    ///     Searches for an approximate for a root of a given function.
     /// </summary>
-    /// <param name="fx">The function to find the root for.</param>
-    /// <param name="initialGuess">The initial guess for what the root could be.</param>
-    /// <param name="iterations">The amount of iterations to perform. The higher this is, the more generally accurate the result will be.</param>
+    ///     <param name="fx">The function to find the root for.</param>
+    ///     <param name="initialGuess">The initial guess for what the root could be.</param>
+    ///     <param name="iterations">The amount of iterations to perform. The higher this is, the more generally accurate the result will be.</param>
     private static double IterativelySearchForRoot(Func<double, double> fx, double initialGuess, int iterations)
     {
         // This uses the Newton-Raphson method to iteratively get closer and closer to roots of a given function.

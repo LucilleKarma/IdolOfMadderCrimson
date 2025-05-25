@@ -23,22 +23,22 @@ namespace IdolOfMadderCrimson.Content.Subworlds;
 public class ForgottenShrineBackground : Background
 {
     /// <summary>
-    /// The curve that contains velocities for the spiral.
+    ///     The curve that contains velocities for the spiral.
     /// </summary>
     private static DeCasteljauCurve lanternPositionPath;
 
     /// <summary>
-    /// The curve that contains positions for the spiral.
+    ///     The curve that contains positions for the spiral.
     /// </summary>
     private static DeCasteljauCurve lanternVelocityPath;
 
     /// <summary>
-    /// The particle system responsible for lanterns in the background.
+    ///     The particle system responsible for lanterns in the background.
     /// </summary>
     private static FramedFastParticleSystem lanternSystem;
 
     /// <summary>
-    /// The set of discrete points that compose the spiral.
+    ///     The set of discrete points that compose the spiral.
     /// </summary>
     private static readonly Vector2[] lanternPathOffsets = new Vector2[65];
 
@@ -58,7 +58,7 @@ public class ForgottenShrineBackground : Background
     ];
 
     /// <summary>
-    /// A 0-1 interpolant which dictates the extent to which the sky gradient shifts.
+    ///     A 0-1 interpolant which dictates the extent to which the sky gradient shifts.
     /// </summary>
     public static float AltSkyGradientInterpolant
     {
@@ -67,12 +67,12 @@ public class ForgottenShrineBackground : Background
     }
 
     /// <summary>
-    /// The current speed of lanterns in the sky.
+    ///     The current speed of lanterns in the sky.
     /// </summary>
-    /// 
-    /// <remarks>
-    /// This value gradually regresses to one over time if disturbed.
-    /// </remarks>
+    ///     
+    ///     <remarks>
+    ///     This value gradually regresses to one over time if disturbed.
+    ///     </remarks>
     public static float LanternSpeed
     {
         get;
@@ -80,7 +80,7 @@ public class ForgottenShrineBackground : Background
     } = 1f;
 
     /// <summary>
-    /// Whether lanterns should be able to spawn this frame.
+    ///     Whether lanterns should be able to spawn this frame.
     /// </summary>
     public static bool LanternsCanSpawn
     {
@@ -89,7 +89,7 @@ public class ForgottenShrineBackground : Background
     } = true;
 
     /// <summary>
-    /// The intensity of the moon's dark backglow.
+    ///     The intensity of the moon's dark backglow.
     /// </summary>
     public static float MoonBackglow
     {
@@ -98,7 +98,7 @@ public class ForgottenShrineBackground : Background
     }
 
     /// <summary>
-    /// The alternate palette to use in accordance with <see cref="AltSkyGradientInterpolant"/>.
+    ///     The alternate palette to use in accordance with <see cref="AltSkyGradientInterpolant"/>.
     /// </summary>
     public static Color[] AltSkyGradient
     {
@@ -107,7 +107,7 @@ public class ForgottenShrineBackground : Background
     } = new Color[4];
 
     /// <summary>
-    /// The standard palette of the background gradient.
+    ///     The standard palette of the background gradient.
     /// </summary>
     public static Color[] StandardPalette =>
     [
@@ -118,7 +118,7 @@ public class ForgottenShrineBackground : Background
     ];
 
     /// <summary>
-    /// The position of the moon in the background.
+    ///     The position of the moon in the background.
     /// </summary>
     public static Vector2 MoonPosition => WotGUtils.ViewportSize * new Vector2(0.67f, 0.15f);
 

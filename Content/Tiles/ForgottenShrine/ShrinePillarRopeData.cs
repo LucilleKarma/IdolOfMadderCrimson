@@ -24,7 +24,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     private static readonly Asset<Texture2D> beadsTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/ShrineRopeBeads");
 
     /// <summary>
-    /// The amount of beads this rope should have.
+    ///     The amount of beads this rope should have.
     /// </summary>
     public int BeadCount
     {
@@ -33,7 +33,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// A general purpose identifier number used for this rope for RNG determinations.
+    ///     A general purpose identifier number used for this rope for RNG determinations.
     /// </summary>
     public int ID
     {
@@ -42,7 +42,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The amount by which this rope should sag when completely at rest.
+    ///     The amount by which this rope should sag when completely at rest.
     /// </summary>
     public float Sag
     {
@@ -51,12 +51,12 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The starting position of the rope.
+    ///     The starting position of the rope.
     /// </summary>
     public Point Start => Position;
 
     /// <summary>
-    /// The end position of the rope.
+    ///     The end position of the rope.
     /// </summary>
     public Point End
     {
@@ -71,12 +71,12 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The verlet segments associated with this rope.
+    ///     The verlet segments associated with this rope.
     /// </summary>
     public readonly Rope VerletRope;
 
     /// <summary>
-    /// The maximum length of this rope.
+    ///     The maximum length of this rope.
     /// </summary>
     public float MaxLength
     {
@@ -85,7 +85,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The amount of gravity imposed on this rope.
+    ///     The amount of gravity imposed on this rope.
     /// </summary>
     public static float Gravity => 0.5f;
 
@@ -112,7 +112,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Updates this rope.
+    ///     Updates this rope.
     /// </summary>
     public override void Update()
     {
@@ -154,7 +154,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Renders this rope.
+    ///     Renders this rope.
     /// </summary>
     public override void Render()
     {
@@ -183,7 +183,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Serializes this rope data as a tag compound for world saving.
+    ///     Serializes this rope data as a tag compound for world saving.
     /// </summary>
     public override TagCompound Serialize()
     {
@@ -200,7 +200,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Deserializes a tag compound containing data for a rope back into said rope.
+    ///     Deserializes a tag compound containing data for a rope back into said rope.
     /// </summary>
     public override ShrinePillarRopeData Deserialize(TagCompound tag)
     {

@@ -17,7 +17,7 @@ public class ShrinePillarData : WorldOrientedTileObject
     private static readonly Asset<Texture2D> ropeAnchorTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/ShrinePillarRopeAnchor");
 
     /// <summary>
-    /// The relative Y interpolant of the rope anchor on this pillar.
+    ///     The relative Y interpolant of the rope anchor on this pillar.
     /// </summary>
     public float RopeAnchorYInterpolant
     {
@@ -26,7 +26,7 @@ public class ShrinePillarData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The rotation of this pillar.
+    ///     The rotation of this pillar.
     /// </summary>
     public float Rotation
     {
@@ -35,7 +35,7 @@ public class ShrinePillarData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The height of this pillar.
+    ///     The height of this pillar.
     /// </summary>
     public float Height
     {
@@ -44,12 +44,12 @@ public class ShrinePillarData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Whether this pillar has a rope anchor or not.
+    ///     Whether this pillar has a rope anchor or not.
     /// </summary>
     public bool HasRopeAnchor => RopeAnchorYInterpolant > 0f && RopeAnchorYInterpolant < 1f;
 
     /// <summary>
-    /// The position of this rope's anchor in world coordinates, or null if there is no anchor.
+    ///     The position of this rope's anchor in world coordinates, or null if there is no anchor.
     /// </summary>
     public Vector2? RopeAnchorPosition
     {

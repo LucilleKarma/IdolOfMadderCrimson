@@ -13,7 +13,7 @@ namespace IdolOfMadderCrimson.Content.NPCs.Bosses.Idol;
 public partial class IdolSummoningRitualSystem : ModSystem
 {
     /// <summary>
-    /// How long it's been since the summoning ritual began.
+    ///     How long it's been since the summoning ritual began.
     /// </summary>
     public int Timer
     {
@@ -22,7 +22,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// The state of the animation.
+    ///     The state of the animation.
     /// </summary>
     public IdolSummoningRitualState State
     {
@@ -31,12 +31,12 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// Whether the summoning ritual is ongoing or not.
+    ///     Whether the summoning ritual is ongoing or not.
     /// </summary>
     public bool IsActive => Timer >= 1;
 
     /// <summary>
-    /// The volume of the base wind sound.
+    ///     The volume of the base wind sound.
     /// </summary>
     public float BaseWindSoundVolume
     {
@@ -45,7 +45,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// The volume of the harsh wind sound.
+    ///     The volume of the harsh wind sound.
     /// </summary>
     public float HarshWindSoundVolume
     {
@@ -54,7 +54,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// The sound instance for the basic wind.
+    ///     The sound instance for the basic wind.
     /// </summary>
     public static LoopedSoundInstance? BaseWindSoundInstance
     {
@@ -63,7 +63,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// The sound instance for the harsh wind.
+    ///     The sound instance for the harsh wind.
     /// </summary>
     public static LoopedSoundInstance? HarshWindSoundInstance
     {
@@ -72,7 +72,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// Handles the natural updating of sounds, making them crossfade and dissipate as necessary.
+    ///     Handles the natural updating of sounds, making them crossfade and dissipate as necessary.
     /// </summary>
     private void UpdateSounds()
     {
@@ -102,7 +102,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// Starts the summoning ritual.
+    ///     Starts the summoning ritual.
     /// </summary>
     public void Start()
     {
@@ -114,7 +114,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// Transitions the current state of this summoning ritual to something else, resetting old data in the process.
+    ///     Transitions the current state of this summoning ritual to something else, resetting old data in the process.
     /// </summary>
     public void SwitchState(IdolSummoningRitualState newState)
     {
@@ -127,7 +127,7 @@ public partial class IdolSummoningRitualSystem : ModSystem
     }
 
     /// <summary>
-    /// Resets the overall state of this summoning ritual.
+    ///     Resets the overall state of this summoning ritual.
     /// </summary>
     public void Reset()
     {

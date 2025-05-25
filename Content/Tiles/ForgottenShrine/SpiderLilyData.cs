@@ -14,7 +14,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     private static readonly Asset<Texture2D> lilyTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/SpiderLily");
 
     /// <summary>
-    /// A general-purpose timer used for wind movement of this lily.
+    ///     A general-purpose timer used for wind movement of this lily.
     /// </summary>
     public float WindTime
     {
@@ -23,7 +23,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The scale of this lily.
+    ///     The scale of this lily.
     /// </summary>
     public float Scale
     {
@@ -32,7 +32,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The Z position of this lily.
+    ///     The Z position of this lily.
     /// </summary>
     public float ZPosition
     {
@@ -41,7 +41,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The direction of this lily.
+    ///     The direction of this lily.
     /// </summary>
     public SpriteEffects Direction
     {
@@ -58,7 +58,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Updates this lily.
+    ///     Updates this lily.
     /// </summary>
     public override void Update()
     {
@@ -66,7 +66,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Renders this lily.
+    ///     Renders this lily.
     /// </summary>
     public override void Render()
     {
@@ -89,7 +89,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Serializes this lily data as a tag compound for world saving.
+    ///     Serializes this lily data as a tag compound for world saving.
     /// </summary>
     public override TagCompound Serialize()
     {
@@ -101,7 +101,7 @@ public class SpiderLilyData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Deserializes a tag compound containing data for a lily back into said lily.
+    ///     Deserializes a tag compound containing data for a lily back into said lily.
     /// </summary>
     public override SpiderLilyData Deserialize(TagCompound tag)
     {

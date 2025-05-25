@@ -38,7 +38,7 @@ public class TEUnderwaterTree : ModTileEntity
     }
 
     /// <summary>
-    /// Renders this tree.
+    ///     Renders this tree.
     /// </summary>
     public void Render()
     {

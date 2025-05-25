@@ -10,7 +10,7 @@ namespace IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 public class IdolStatueManager : WorldOrientedTileObjectManager<IdolStatueData>
 {
     /// <summary>
-    /// The 0-1 interpolant which dictates how much water flows are cut off.
+    ///     The 0-1 interpolant which dictates how much water flows are cut off.
     /// </summary>
     public static float WaterFlowCutoffInterpolant
     {
@@ -19,7 +19,7 @@ public class IdolStatueManager : WorldOrientedTileObjectManager<IdolStatueData>
     }
 
     /// <summary>
-    /// An optional extra draw action to perform on all statues.
+    ///     An optional extra draw action to perform on all statues.
     /// </summary>
     public static Action<Vector2>? ExtraDrawAction
     {

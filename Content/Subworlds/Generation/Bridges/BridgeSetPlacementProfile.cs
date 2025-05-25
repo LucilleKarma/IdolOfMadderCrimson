@@ -3,27 +3,27 @@
 public class BridgeSetPlacementProfile
 {
     /// <summary>
-    /// The bridge generator responsible for this placement profile.
+    ///     The bridge generator responsible for this placement profile.
     /// </summary>
     public readonly BridgeSetGenerator Generator;
 
     /// <summary>
-    /// The set of arch heights across the generation span.
+    ///     The set of arch heights across the generation span.
     /// </summary>
     public readonly int[] ArchHeights;
 
     /// <summary>
-    /// The set of arch horizontal arch interpolants across the generation span.
+    ///     The set of arch horizontal arch interpolants across the generation span.
     /// </summary>
     public readonly float[] ArchHeightInterpolants;
 
     /// <summary>
-    /// A set of values across the generation span that determined how much higher fences should be at each point.
+    ///     A set of values across the generation span that determined how much higher fences should be at each point.
     /// </summary>
     public readonly int[] FenceExtraHeightMap;
 
     /// <summary>
-    /// A set of flags that across the generation span that determine whether an arch has descended (gone down one or more in Y height) or ascended (gone up one or more in Y height).
+    ///     A set of flags that across the generation span that determine whether an arch has descended (gone down one or more in Y height) or ascended (gone up one or more in Y height).
     /// </summary>
     public readonly bool[] FenceDescendingFlags;
 

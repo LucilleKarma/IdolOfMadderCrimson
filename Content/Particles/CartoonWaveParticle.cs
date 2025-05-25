@@ -12,7 +12,7 @@ namespace IdolOfMadderCrimson.Content.Particles;
 public class CartoonWaveParticle : BaseParticle
 {
     /// <summary>
-    /// The particle pool responsible for wave particles.
+    ///     The particle pool responsible for wave particles.
     /// </summary>
     public static ParticlePool<CartoonWaveParticle> Pool
     {
@@ -21,37 +21,37 @@ public class CartoonWaveParticle : BaseParticle
     } = new ParticlePool<CartoonWaveParticle>(256, GetNewParticle<CartoonWaveParticle>);
 
     /// <summary>
-    /// The position of this wave.
+    ///     The position of this wave.
     /// </summary>
     public Vector2 Position;
 
     /// <summary>
-    /// The velocity of this wave.
+    ///     The velocity of this wave.
     /// </summary>
     public Vector2 Velocity;
 
     /// <summary>
-    /// The rotation of this wave.
+    ///     The rotation of this wave.
     /// </summary>
     public float Rotation;
 
     /// <summary>
-    /// The base color of this wave.
+    ///     The base color of this wave.
     /// </summary>
     public Color Color;
 
     /// <summary>
-    /// How long this wave has existed for, in frames.
+    ///     How long this wave has existed for, in frames.
     /// </summary>
     public int Time;
 
     /// <summary>
-    /// How long this wave should exist for, in frames.
+    ///     How long this wave should exist for, in frames.
     /// </summary>
     public int Lifetime;
 
     /// <summary>
-    /// The scale of this wave.
+    ///     The scale of this wave.
     /// </summary>
     public Vector2 Scale;
 

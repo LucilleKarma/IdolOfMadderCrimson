@@ -24,7 +24,7 @@ namespace IdolOfMadderCrimson.Content.Subworlds;
 public class ForgottenShrineSystem : ModSystem
 {
     /// <summary>
-    /// Whether the current client was in the shrine subworld last frame.
+    ///     Whether the current client was in the shrine subworld last frame.
     /// </summary>
     public static bool WasInSubworldLastFrame
     {
@@ -33,17 +33,17 @@ public class ForgottenShrineSystem : ModSystem
     }
 
     /// <summary>
-    /// An event that's invoked when the shrine subworld is entered.
+    ///     An event that's invoked when the shrine subworld is entered.
     /// </summary>
     public static event Action OnEnter;
 
     /// <summary>
-    /// The horizontal distance in parsecs displayed if the player has the appropriate info accessory.
+    ///     The horizontal distance in parsecs displayed if the player has the appropriate info accessory.
     /// </summary>
     public static ulong HorizontalDistanceParsecs => 7411267481601;
 
     /// <summary>
-    /// The vertical distance in parsecs displayed if the player has the appropriate info accessory.
+    ///     The vertical distance in parsecs displayed if the player has the appropriate info accessory.
     /// </summary>
     public static ulong VerticalDistanceParsecs => 7233858412997;
 

@@ -30,7 +30,7 @@ public class IdolStatueData : WorldOrientedTileObject
     { }
 
     /// <summary>
-    /// Updates this statue.
+    ///     Updates this statue.
     /// </summary>
     public override void Update()
     {
@@ -45,7 +45,7 @@ public class IdolStatueData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Renders this statue.
+    ///     Renders this statue.
     /// </summary>
     public override void Render()
     {
@@ -96,7 +96,7 @@ public class IdolStatueData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Serializes this statue data as a tag compound for world saving.
+    ///     Serializes this statue data as a tag compound for world saving.
     /// </summary>
     public override TagCompound Serialize() => new TagCompound()
     {
@@ -104,7 +104,7 @@ public class IdolStatueData : WorldOrientedTileObject
     };
 
     /// <summary>
-    /// Deserializes a tag compound containing data for a statue back into said statue.
+    ///     Deserializes a tag compound containing data for a statue back into said statue.
     /// </summary>
     public override IdolStatueData Deserialize(TagCompound tag) => new IdolStatueData(tag.Get<Point>("Position"));
 }

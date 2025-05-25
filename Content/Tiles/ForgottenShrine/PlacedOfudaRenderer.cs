@@ -11,7 +11,7 @@ namespace IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 public class PlacedOfudaRenderer : ModSystem
 {
     /// <summary>
-    /// The render target in which ofuda are rendered into before being pixelated.
+    ///     The render target in which ofuda are rendered into before being pixelated.
     /// </summary>
     public static InstancedRequestableTarget OfudaTarget
     {

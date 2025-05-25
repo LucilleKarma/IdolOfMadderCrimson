@@ -72,7 +72,7 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
     internal static ManagedRenderTarget? liquidDistanceTarget;
 
     /// <summary>
-    /// A general purpose timer used for water perturbations that increments based on wind speed and direction.
+    ///     A general purpose timer used for water perturbations that increments based on wind speed and direction.
     /// </summary>
     public static float WindTimer
     {
@@ -81,12 +81,12 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
     }
 
     /// <summary>
-    /// A queue of points that determines where points in space should be converted to ripples, in world coordinates.
+    ///     A queue of points that determines where points in space should be converted to ripples, in world coordinates.
     /// </summary>
     public static readonly Queue<Vector2> PointsToAddRipplesAt = new Queue<Vector2>(32);
 
     /// <summary>
-    /// The render target responsible for temporarily storing information to be swapped over back into the original target.
+    ///     The render target responsible for temporarily storing information to be swapped over back into the original target.
     /// </summary>
     public static ManagedRenderTarget? UpdateTarget
     {
@@ -95,7 +95,7 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
     }
 
     /// <summary>
-    /// The render target responsible for water ripple effects.
+    ///     The render target responsible for water ripple effects.
     /// </summary>
     public static ManagedRenderTarget? WaterStepRippleTarget
     {
@@ -104,17 +104,17 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
     }
 
     /// <summary>
-    /// Whether water effects for this system are active or not.
+    ///     Whether water effects for this system are active or not.
     /// </summary>
     public static bool WaterEffectsActive => ForgottenShrineSystem.WasInSubworldLastFrame;
 
     /// <summary>
-    /// The sound played when players walk on water and create ripples.
+    ///     The sound played when players walk on water and create ripples.
     /// </summary>
     public static readonly SoundStyle RippleStepSound = new SoundStyle("IdolOfMadderCrimson/Assets/Sounds/Environment/WaterRipple", 3);
 
     /// <summary>
-    /// The render target that holds vertical liquid distance information.
+    ///     The render target that holds vertical liquid distance information.
     /// </summary>
     public static ManagedRenderTarget? LiquidDistanceTarget
     {

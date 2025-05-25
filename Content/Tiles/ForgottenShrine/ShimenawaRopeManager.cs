@@ -11,7 +11,7 @@ namespace IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 public class ShimenawaRopeManager : WorldOrientedTileObjectManager<ShimenawaRopeData>
 {
     /// <summary>
-    /// Then render target responsible for holding draw contents of all shimenawa ropes.
+    ///     Then render target responsible for holding draw contents of all shimenawa ropes.
     /// </summary>
     public static InstancedRequestableTarget RopeTarget
     {
@@ -26,7 +26,7 @@ public class ShimenawaRopeManager : WorldOrientedTileObjectManager<ShimenawaRope
     }
 
     /// <summary>
-    /// Registers a new rope into the set of ropes maintained by the world.
+    ///     Registers a new rope into the set of ropes maintained by the world.
     /// </summary>
     public override void Register(ShimenawaRopeData rope)
     {

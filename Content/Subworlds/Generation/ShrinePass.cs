@@ -153,7 +153,7 @@ public class ShrinePass : GenPass
     }
 
     /// <summary>
-    /// Places candles near the shrine.
+    ///     Places candles near the shrine.
     /// </summary>
     internal static void CreateCandles()
     {

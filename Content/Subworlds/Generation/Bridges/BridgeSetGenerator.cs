@@ -1,8 +1,8 @@
-﻿using IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
+﻿using System;
+using System.Runtime.CompilerServices;
+using IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
-using System;
-using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -14,17 +14,17 @@ namespace IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings settings)
 {
     /// <summary>
-    /// The leftmost point of the bridge, in tile coordinates.
+    ///     The leftmost point of the bridge, in tile coordinates.
     /// </summary>
     public readonly int Left = left;
 
     /// <summary>
-    /// The rightmost part of the bridge, in tile coordinates.
+    ///     The rightmost part of the bridge, in tile coordinates.
     /// </summary>
     public readonly int Right = right;
 
     /// <summary>
-    /// The settings that define how this bridge set should generate.
+    ///     The settings that define how this bridge set should generate.
     /// </summary>
     public readonly BridgeGenerationSettings Settings = settings;
 
@@ -66,7 +66,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places the base tiles for the bridge that the player can walk on.
+    ///     Places the base tiles for the bridge that the player can walk on.
     /// </summary>
     private void PlaceBaseTiles(int x, int archStartingY, int extraThickness)
     {
@@ -80,7 +80,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Chooses the type of tile that should be generated on the bridge based on its Y position, relative to the thickness of said bridge.
+    ///     Chooses the type of tile that should be generated on the bridge based on its Y position, relative to the thickness of said bridge.
     /// </summary>
     internal static int DetermineBaseTileIDByHeight(int y, int thickness)
     {
@@ -94,7 +94,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places guardrail fences above the bridge.
+    ///     Places guardrail fences above the bridge.
     /// </summary>
     private void PlaceFence(int x, int archStartingY, BridgeSetPlacementProfile profile)
     {
@@ -141,7 +141,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places walls below the bridge.
+    ///     Places walls below the bridge.
     /// </summary>
     private void PlaceUndersideWalls(int x, float archHeightInterpolant, int archStartingY, int extraThickness)
     {
@@ -159,7 +159,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places beams into the water at points where the arches are at their nadir.
+    ///     Places beams into the water at points where the arches are at their nadir.
     /// </summary>
     private void PlaceBeams(int groundLevelY, int bridgeLowYPoint)
     {
@@ -171,7 +171,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places a bridge beam that descends into the water below.
+    ///     Places a bridge beam that descends into the water below.
     /// </summary>
     private void PlaceBeam(int groundLevelY, int startingX, int startingY)
     {
@@ -193,7 +193,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places ropes beneath bridges.
+    ///     Places ropes beneath bridges.
     /// </summary>
     private void PlaceRopesUnderneathBridge(int startY, BridgeSetPlacementProfile profile)
     {
@@ -225,7 +225,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places decorations underneath bridges.
+    ///     Places decorations underneath bridges.
     /// </summary>
     private void PlaceDecorationsUnderneathBridge(int startY, int spacing, BridgeSetPlacementProfile profile)
     {
@@ -264,7 +264,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places ofuda underneath bridges.
+    ///     Places ofuda underneath bridges.
     /// </summary>
     private void PlaceOfudaUnderneathBridge(int startY, int spacing, BridgeSetPlacementProfile profile)
     {
@@ -289,7 +289,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Generates a roof out of patterned walls and periodic rooftop tiles at the center of bridges.
+    ///     Generates a roof out of patterned walls and periodic rooftop tiles at the center of bridges.
     /// </summary>
     private void GenerateRoof(int archTopY, BridgeSetPlacementProfile profile)
     {
@@ -383,7 +383,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places decorations underneath a generated rooftop.
+    ///     Places decorations underneath a generated rooftop.
     /// </summary>
     private void PlaceDecorationsUnderneathRooftop(int x, int roofBottomY)
     {
@@ -423,7 +423,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Places decorations atop the roof walls where there isn't a rooftop.
+    ///     Places decorations atop the roof walls where there isn't a rooftop.
     /// </summary>
     private void PlaceDecorationsAboveTopOfArch(int x, int roofBottomY)
     {
@@ -442,7 +442,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Generates a rooftop at a given position for a bridge.
+    ///     Generates a rooftop at a given position for a bridge.
     /// </summary>
     private void GenerateRooftop(int x, int y, int roofWidth, int roofHeight)
     {
@@ -483,31 +483,31 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Calculates what a given X position in tile coordinates is relative to a given bridge for this generator.
+    ///     Calculates what a given X position in tile coordinates is relative to a given bridge for this generator.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CalculateXWrappedBySingleBridge(int x) => (x - Left) % Settings.BridgeArchWidth;
 
     /// <summary>
-    /// Calculates what a given X position in tile coordinates is relative to a given bridge set for this generator.
+    ///     Calculates what a given X position in tile coordinates is relative to a given bridge set for this generator.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CalculateXWrappedByBridgeSet(int x) => (x - Left) % (Settings.BridgeArchWidth * Settings.BridgeRooftopsPerBridge);
 
     /// <summary>
-    /// Determines whether a given X position in tile coordinates is in the range of a bridge with a rooftop.
+    ///     Determines whether a given X position in tile coordinates is in the range of a bridge with a rooftop.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool InRooftopBridgeRange(int x) => (x - Left) / Settings.BridgeArchWidth % Settings.BridgeRooftopsPerBridge == 0;
 
     /// <summary>
-    /// Determines whether a given X position in tile coordinates is in the range of a bridge without a rooftop.
+    ///     Determines whether a given X position in tile coordinates is in the range of a bridge without a rooftop.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool InNonRooftopBridgeRange(int x) => (x - Left) / Settings.BridgeArchWidth % Settings.BridgeRooftopsPerBridge != 0;
 
     /// <summary>
-    /// Determines the vertical offset of the bridge's arch at a given X position in tile coordinates, providing the arch height interpolant in the process.
+    ///     Determines the vertical offset of the bridge's arch at a given X position in tile coordinates, providing the arch height interpolant in the process.
     /// </summary>
     public int CalculateArchHeight(int x, out float archHeightInterpolant)
     {
@@ -520,7 +520,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     }
 
     /// <summary>
-    /// Determines the vertical offset of the bridge's arch at a given X position in tile coordinates.
+    ///     Determines the vertical offset of the bridge's arch at a given X position in tile coordinates.
     /// </summary>
     public int CalculateArchHeight(int x) => CalculateArchHeight(x, out _);
 }

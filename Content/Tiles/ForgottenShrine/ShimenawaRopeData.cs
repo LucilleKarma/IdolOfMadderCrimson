@@ -24,7 +24,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     public class ShimenawaRopeOrnament
     {
         /// <summary>
-        /// How many frames it's been since this ornament was last interacted with.
+        ///     How many frames it's been since this ornament was last interacted with.
         /// </summary>
         public int InteractionTimer
         {
@@ -33,7 +33,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// The position of this ornament.
+        ///     The position of this ornament.
         /// </summary>
         public Vector2 Position
         {
@@ -42,7 +42,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// The texture associated with this orament.
+        ///     The texture associated with this orament.
         /// </summary>
         public Asset<Texture2D> TextureAsset
         {
@@ -51,7 +51,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// A 0-1 interpolant which dictates how far along the rope this ornament should be placed.
+        ///     A 0-1 interpolant which dictates how far along the rope this ornament should be placed.
         /// </summary>
         public float PositionInterpolant
         {
@@ -60,7 +60,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// The current rotation of this ornament.
+        ///     The current rotation of this ornament.
         /// </summary>
         public float Rotation
         {
@@ -69,7 +69,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// The angular velocity of this ornament.
+        ///     The angular velocity of this ornament.
         /// </summary>
         public float AngularVelocity
         {
@@ -78,7 +78,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// The scale of this ornament.
+        ///     The scale of this ornament.
         /// </summary>
         public float Scale
         {
@@ -87,7 +87,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// An optional action that should happen when this ornament is interacted with.
+        ///     An optional action that should happen when this ornament is interacted with.
         /// </summary>
         public Action<ShimenawaRopeOrnament, Player, float>? InteractionAction
         {
@@ -118,10 +118,10 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         }
 
         /// <summary>
-        /// Renders this ornament on the rope.
+        ///     Renders this ornament on the rope.
         /// </summary>
-        /// <param name="drawPosition">The draw position of the rope.</param>
-        /// <param name="color">The color of rope.</param>
+        ///     <param name="drawPosition">The draw position of the rope.</param>
+        ///     <param name="color">The color of rope.</param>
         public void Render(Vector2 drawPosition, Color color)
         {
             Texture2D texture = TextureAsset.Value;
@@ -138,7 +138,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     private static readonly Asset<Texture2D> shideTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/Shide");
 
     /// <summary>
-    /// The amount by which this rope should sag when completely at rest.
+    ///     The amount by which this rope should sag when completely at rest.
     /// </summary>
     public float Sag
     {
@@ -147,12 +147,12 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The starting position of the rope.
+    ///     The starting position of the rope.
     /// </summary>
     public Point Start => Position;
 
     /// <summary>
-    /// The end position of the rope.
+    ///     The end position of the rope.
     /// </summary>
     public Point End
     {
@@ -167,12 +167,12 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The verlet segments associated with this rope.
+    ///     The verlet segments associated with this rope.
     /// </summary>
     public readonly Rope VerletRope;
 
     /// <summary>
-    /// The maximum length of this rope.
+    ///     The maximum length of this rope.
     /// </summary>
     public float MaxLength
     {
@@ -181,7 +181,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The set of ornaments on this rope.
+    ///     The set of ornaments on this rope.
     /// </summary>
     public ShimenawaRopeOrnament[] Ornaments =
     [
@@ -193,7 +193,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     ];
 
     /// <summary>
-    /// The amount of gravity imposed on this rope.
+    ///     The amount of gravity imposed on this rope.
     /// </summary>
     public static float Gravity => 0.5f;
 
@@ -244,7 +244,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Updates this rope.
+    ///     Updates this rope.
     /// </summary>
     public override void Update()
     {
@@ -307,7 +307,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Renders this rope.
+    ///     Renders this rope.
     /// </summary>
     public override void Render()
     {
@@ -322,7 +322,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Serializes this rope data as a tag compound for world saving.
+    ///     Serializes this rope data as a tag compound for world saving.
     /// </summary>
     public override TagCompound Serialize()
     {
@@ -337,7 +337,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Deserializes a tag compound containing data for a rope back into said rope.
+    ///     Deserializes a tag compound containing data for a rope back into said rope.
     /// </summary>
     public override ShimenawaRopeData Deserialize(TagCompound tag)
     {

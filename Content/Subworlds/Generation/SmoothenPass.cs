@@ -9,7 +9,7 @@ namespace IdolOfMadderCrimson.Content.Subworlds.Generation;
 public class SmoothenPass : GenPass
 {
     /// <summary>
-    /// The set of all points that should not be smoothened by this pass.
+    ///     The set of all points that should not be smoothened by this pass.
     /// </summary>
     public static HashSet<Point> PointsToNotSmoothen
     {

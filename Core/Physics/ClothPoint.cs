@@ -4,42 +4,42 @@ using Terraria;
 namespace IdolOfMadderCrimson.Core.Physics;
 
 /// <summary>
-/// Represents a point on a grid that composes a piece of cloth.
+///     Represents a point on a grid that composes a piece of cloth.
 /// </summary>
 public class ClothPoint
 {
     /// <summary>
-    /// The previous position of the point in space.
+    ///     The previous position of the point in space.
     /// </summary>
     public Vector3 PreviousPosition;
 
     /// <summary>
-    /// The current position of the point in space.
+    ///     The current position of the point in space.
     /// </summary>
     public Vector3 Position;
 
     /// <summary>
-    /// The normal direction of this cloth.
+    ///     The normal direction of this cloth.
     /// </summary>
     public Vector3 Normal;
 
     /// <summary>
-    /// The acceleration of this cloth.
+    ///     The acceleration of this cloth.
     /// </summary>
     public Vector3 Acceleration;
 
     /// <summary>
-    /// Dictates whether this cloth point should move or not.
+    ///     Dictates whether this cloth point should move or not.
     /// </summary>
     public bool IsFixed;
 
     /// <summary>
-    /// The X grid position of this point.
+    ///     The X grid position of this point.
     /// </summary>
     public readonly int X;
 
     /// <summary>
-    /// The Y grid position of this point.
+    ///     The Y grid position of this point.
     /// </summary>
     public readonly int Y;
 

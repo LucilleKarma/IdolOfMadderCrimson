@@ -21,12 +21,12 @@ public class TEEnigmaticTapestry : ModTileEntity, IClientSideTileEntityUpdater
     private ClothSimulation cloth;
 
     /// <summary>
-    /// The position at which this cloth is anchored, essentially its top-center in world coordinates.
+    ///     The position at which this cloth is anchored, essentially its top-center in world coordinates.
     /// </summary>
     private Vector3 AnchorPosition => new Vector3(Position.ToWorldCoordinates(0f, 0f), 0f);
 
     /// <summary>
-    /// The variant of this tapestry.
+    ///     The variant of this tapestry.
     /// </summary>
     public int TapestryVariant => ((int)(ID / MathHelper.PiOver2) + Position.X * 11) % tapestryTextures.Length;
 
@@ -113,7 +113,7 @@ public class TEEnigmaticTapestry : ModTileEntity, IClientSideTileEntityUpdater
     }
 
     /// <summary>
-    /// Applies a simulationn step to this tapestry's cloth.
+    ///     Applies a simulationn step to this tapestry's cloth.
     /// </summary>
     public void ApplySimulationStep()
     {
@@ -147,7 +147,7 @@ public class TEEnigmaticTapestry : ModTileEntity, IClientSideTileEntityUpdater
     }
 
     /// <summary>
-    /// Locks certain cloth particles in place so that they don't fall infinitely.
+    ///     Locks certain cloth particles in place so that they don't fall infinitely.
     /// </summary>
     private void ConstrainParticle(Vector3 anchor, ClothPoint? point)
     {
@@ -161,7 +161,7 @@ public class TEEnigmaticTapestry : ModTileEntity, IClientSideTileEntityUpdater
     }
 
     /// <summary>
-    /// Renders this tapestry.
+    ///     Renders this tapestry.
     /// </summary>
     public void Render()
     {

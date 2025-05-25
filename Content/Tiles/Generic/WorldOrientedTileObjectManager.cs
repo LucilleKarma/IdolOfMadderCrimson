@@ -8,7 +8,7 @@ namespace IdolOfMadderCrimson.Content.Tiles.Generic;
 public abstract class WorldOrientedTileObjectManager<TTileObject> : ModSystem where TTileObject : WorldOrientedTileObject, new()
 {
     /// <summary>
-    /// The set of tile objects maintained by this manager.
+    ///     The set of tile objects maintained by this manager.
     /// </summary>
     public List<TTileObject> TileObjects
     {
@@ -17,12 +17,12 @@ public abstract class WorldOrientedTileObjectManager<TTileObject> : ModSystem wh
     } = new List<TTileObject>(32);
 
     /// <summary>
-    /// Registers a new tile object into the set maintained by the world.
+    ///     Registers a new tile object into the set maintained by the world.
     /// </summary>
     public virtual void Register(TTileObject tileObject) => TileObjects.Add(tileObject);
 
     /// <summary>
-    /// Removes a given existing tile object from the set maintained by the world.
+    ///     Removes a given existing tile object from the set maintained by the world.
     /// </summary>
     public void Remove(TTileObject tileObject) => TileObjects.Remove(tileObject);
 

@@ -26,7 +26,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     private static readonly Asset<Texture2D> spiralTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/RopeSpiral");
 
     /// <summary>
-    /// A general-purpose timer used for wind movement on the baubles attached to this rope.
+    ///     A general-purpose timer used for wind movement on the baubles attached to this rope.
     /// </summary>
     public float WindTime
     {
@@ -35,7 +35,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The amount by which this rope should sag when completely at rest.
+    ///     The amount by which this rope should sag when completely at rest.
     /// </summary>
     public float Sag
     {
@@ -44,12 +44,12 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The starting position of the rope.
+    ///     The starting position of the rope.
     /// </summary>
     public Point Start => Position;
 
     /// <summary>
-    /// The end position of the rope.
+    ///     The end position of the rope.
     /// </summary>
     public Point End
     {
@@ -66,12 +66,12 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The verlet segments associated with this rope.
+    ///     The verlet segments associated with this rope.
     /// </summary>
     public readonly Rope VerletRope;
 
     /// <summary>
-    /// The maximum length of this rope.
+    ///     The maximum length of this rope.
     /// </summary>
     public float MaxLength
     {
@@ -80,12 +80,12 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The amount of gravity imposed on this rope.
+    ///     The amount of gravity imposed on this rope.
     /// </summary>
     public static float Gravity => 0.65f;
 
     /// <summary>
-    /// The asset for the paper lantern texture used by this rope.
+    ///     The asset for the paper lantern texture used by this rope.
     /// </summary>
     public static readonly Asset<Texture2D> PaperLanternTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/PaperLantern");
 
@@ -117,7 +117,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Updates this rope.
+    ///     Updates this rope.
     /// </summary>
     public override void Update()
     {
@@ -168,7 +168,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Renders this rope.
+    ///     Renders this rope.
     /// </summary>
     public override void Render()
     {
@@ -236,7 +236,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Serializes this rope data as a tag compound for world saving.
+    ///     Serializes this rope data as a tag compound for world saving.
     /// </summary>
     public override TagCompound Serialize()
     {
@@ -251,7 +251,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Deserializes a tag compound containing data for a rope back into said rope.
+    ///     Deserializes a tag compound containing data for a rope back into said rope.
     /// </summary>
     public override OrnamentalShrineRopeData Deserialize(TagCompound tag)
     {

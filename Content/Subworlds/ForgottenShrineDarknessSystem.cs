@@ -17,7 +17,7 @@ namespace IdolOfMadderCrimson.Content.Subworlds;
 public class ForgottenShrineDarknessSystem : ModSystem
 {
     /// <summary>
-    /// A render target that contains all glow information in contrast to the darkness.
+    ///     A render target that contains all glow information in contrast to the darkness.
     /// </summary>
     public static InstancedRequestableTarget GlowTarget
     {
@@ -26,7 +26,7 @@ public class ForgottenShrineDarknessSystem : ModSystem
     }
 
     /// <summary>
-    /// A queue that represents the set of draw actions that should be render into the glow target.
+    ///     A queue that represents the set of draw actions that should be render into the glow target.
     /// </summary>
     internal static Queue<Action> GlowActionsQueue
     {
@@ -35,7 +35,7 @@ public class ForgottenShrineDarknessSystem : ModSystem
     } = new Queue<Action>(256);
 
     /// <summary>
-    /// The darkness factor for use with the darkening effect on the island.
+    ///     The darkness factor for use with the darkening effect on the island.
     /// </summary>
     public static float Darkness
     {
@@ -44,12 +44,12 @@ public class ForgottenShrineDarknessSystem : ModSystem
     }
 
     /// <summary>
-    /// The standard darkness factor for the darkening effect on the island.
+    ///     The standard darkness factor for the darkening effect on the island.
     /// </summary>
     public static float StandardDarkness => 0.56f;
 
     /// <summary>
-    /// Whether the darkening effect should be applied.
+    ///     Whether the darkening effect should be applied.
     /// </summary>
     public static bool EffectShouldBeActive => ForgottenShrineSystem.WasInSubworldLastFrame;
 
@@ -105,7 +105,7 @@ public class ForgottenShrineDarknessSystem : ModSystem
     }
 
     /// <summary>
-    /// Queues a new action to be performed by the glow queue.
+    ///     Queues a new action to be performed by the glow queue.
     /// </summary>
     public static void QueueGlowAction(Action action)
     {

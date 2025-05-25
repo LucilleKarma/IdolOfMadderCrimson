@@ -29,7 +29,7 @@ public class OrnamentalShrineRopeSystem : WorldOrientedTileObjectManager<Ornamen
     }
 
     /// <summary>
-    /// Registers a new rope into the set of ropes maintained by the world.
+    ///     Registers a new rope into the set of ropes maintained by the world.
     /// </summary>
     public override void Register(OrnamentalShrineRopeData rope)
     {

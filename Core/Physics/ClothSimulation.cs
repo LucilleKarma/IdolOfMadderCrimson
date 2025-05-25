@@ -13,7 +13,7 @@ public class ClothSimulation
     internal readonly ClothPoint[,] particleGrid;
 
     /// <summary>
-    /// The dampening coefficient of this simulation.
+    ///     The dampening coefficient of this simulation.
     /// </summary>
     public float DampeningCoefficient
     {
@@ -22,22 +22,22 @@ public class ClothSimulation
     }
 
     /// <summary>
-    /// The width of the simulation grid.
+    ///     The width of the simulation grid.
     /// </summary>
     public readonly int Width;
 
     /// <summary>
-    /// The height of the simulation grid.
+    ///     The height of the simulation grid.
     /// </summary>
     public readonly int Height;
 
     /// <summary>
-    /// The particles that compose this simulation.
+    ///     The particles that compose this simulation.
     /// </summary>
     public List<ClothPoint> Particles = new List<ClothPoint>(1024);
 
     /// <summary>
-    /// The springs that compose this simulation.
+    ///     The springs that compose this simulation.
     /// </summary>
     public List<ClothSpring> Springs = new List<ClothSpring>(1024);
 

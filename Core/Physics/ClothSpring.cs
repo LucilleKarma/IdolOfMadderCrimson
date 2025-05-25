@@ -3,27 +3,27 @@
 namespace IdolOfMadderCrimson.Core.Physics;
 
 /// <summary>
-/// Represents a spring on a grid that keeps two cloth points together.
+///     Represents a spring on a grid that keeps two cloth points together.
 /// </summary>
 public class ClothSpring
 {
     /// <summary>
-    /// The first point.
+    ///     The first point.
     /// </summary>
     public ClothPoint P1;
 
     /// <summary>
-    /// The second point.
+    ///     The second point.
     /// </summary>
     public ClothPoint P2;
 
     /// <summary>
-    /// The desired spacing for this spring.
+    ///     The desired spacing for this spring.
     /// </summary>
     public float RestLength;
 
     /// <summary>
-    /// The stiffness of this spring.
+    ///     The stiffness of this spring.
     /// </summary>
     public float Stiffness;
 

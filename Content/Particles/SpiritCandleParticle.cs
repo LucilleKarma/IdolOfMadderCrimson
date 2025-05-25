@@ -21,7 +21,7 @@ public class SpiritCandleParticle : BaseParticle
     }
 
     /// <summary>
-    /// The particle pool responsible for candle particles.
+    ///     The particle pool responsible for candle particles.
     /// </summary>
     public static ParticlePool<SpiritCandleParticle> Pool
     {
@@ -30,7 +30,7 @@ public class SpiritCandleParticle : BaseParticle
     } = new ParticlePool<SpiritCandleParticle>(512, GetNewParticle<SpiritCandleParticle>);
 
     /// <summary>
-    /// A unique time offset value used for flickers to ensure variance.
+    ///     A unique time offset value used for flickers to ensure variance.
     /// </summary>
     public float FlickerTimeOffset
     {
@@ -39,7 +39,7 @@ public class SpiritCandleParticle : BaseParticle
     }
 
     /// <summary>
-    /// The type of behavior that this candle should use.
+    ///     The type of behavior that this candle should use.
     /// </summary>
     public AIType Behavior
     {
@@ -48,42 +48,42 @@ public class SpiritCandleParticle : BaseParticle
     }
 
     /// <summary>
-    /// The position of this candle.
+    ///     The position of this candle.
     /// </summary>
     public Vector2 Position;
 
     /// <summary>
-    /// The velocity of this candle.
+    ///     The velocity of this candle.
     /// </summary>
     public Vector2 Velocity;
 
     /// <summary>
-    /// The rotation of this candle.
+    ///     The rotation of this candle.
     /// </summary>
     public float Rotation;
 
     /// <summary>
-    /// The base color of this candle.
+    ///     The base color of this candle.
     /// </summary>
     public Color Color;
 
     /// <summary>
-    /// How long this candle has existed for, in frames.
+    ///     How long this candle has existed for, in frames.
     /// </summary>
     public int Time;
 
     /// <summary>
-    /// A general-purpose animation timer for this candle.
+    ///     A general-purpose animation timer for this candle.
     /// </summary>
     public float AnimationTimer;
 
     /// <summary>
-    /// The scale of this candle.
+    ///     The scale of this candle.
     /// </summary>
     public Vector2 Scale;
 
     /// <summary>
-    /// The base scale of this candle.
+    ///     The base scale of this candle.
     /// </summary>
     public Vector2 BaseScale;
 

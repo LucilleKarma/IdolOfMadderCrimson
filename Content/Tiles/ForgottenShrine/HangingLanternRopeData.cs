@@ -21,7 +21,7 @@ namespace IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 public class HangingLanternRopeData : WorldOrientedTileObject
 {
     /// <summary>
-    /// The amount by which this rope should sag when completely at rest.
+    ///     The amount by which this rope should sag when completely at rest.
     /// </summary>
     public float Sag
     {
@@ -30,7 +30,7 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The horizontal direction of this rope's lantern.
+    ///     The horizontal direction of this rope's lantern.
     /// </summary>
     public int Direction
     {
@@ -39,7 +39,7 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// A general-purpose timer used for wind movement on the baubles attached to this rope.
+    ///     A general-purpose timer used for wind movement on the baubles attached to this rope.
     /// </summary>
     public float WindTime
     {
@@ -48,12 +48,12 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The verlet segments associated with this rope.
+    ///     The verlet segments associated with this rope.
     /// </summary>
     public readonly Rope VerletRope;
 
     /// <summary>
-    /// The maximum length of this rope.
+    ///     The maximum length of this rope.
     /// </summary>
     public float MaxLength
     {
@@ -62,12 +62,12 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// The amount of gravity imposed on this rope.
+    ///     The amount of gravity imposed on this rope.
     /// </summary>
     public static float Gravity => 0.6f;
 
     /// <summary>
-    /// The asset for the knot texture used by this rope.
+    ///     The asset for the knot texture used by this rope.
     /// </summary>
     public static readonly Asset<Texture2D> KnotTexture = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Tiles/ForgottenShrine/HangingLanternRopeKnot");
 
@@ -86,7 +86,7 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Updates this rope.
+    ///     Updates this rope.
     /// </summary>
     public override void Update()
     {
@@ -167,7 +167,7 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Renders this rope.
+    ///     Renders this rope.
     /// </summary>
     public override void Render()
     {
@@ -175,7 +175,7 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Serializes this rope data as a tag compound for world saving.
+    ///     Serializes this rope data as a tag compound for world saving.
     /// </summary>
     public override TagCompound Serialize()
     {
@@ -190,7 +190,7 @@ public class HangingLanternRopeData : WorldOrientedTileObject
     }
 
     /// <summary>
-    /// Deserializes a tag compound containing data for a rope back into said rope.
+    ///     Deserializes a tag compound containing data for a rope back into said rope.
     /// </summary>
     public override HangingLanternRopeData Deserialize(TagCompound tag)
     {
