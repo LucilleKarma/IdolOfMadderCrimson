@@ -93,12 +93,15 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
     /// <param name="lightColor">The modifiable light color.</param>
     internal static void ApplySwagTileShadows(int x, int y, ref Vector3 lightColor)
     {
+        if (!Main.tile[x, y].HasTile)
+            return;
+
         int shrineIslandLeft = BaseBridgePass.BridgeGenerator.Right + ForgottenShrineGenerationHelpers.LakeWidth + BaseBridgePass.GenerationSettings.DockWidth;
         int shrineIslandWidth = ForgottenShrineGenerationHelpers.ShrineIslandWidth;
         float islandInterpolant = LumUtils.InverseLerpBump(0f, 16f, shrineIslandWidth - 16f, shrineIslandWidth, x - shrineIslandLeft);
 
         // Lucille's swag shadows ACTIVATE!
-        if (islandInterpolant > 0f && Main.tile[x, y].HasTile)
+        if (islandInterpolant > 0f)
         {
             int distanceToSurface = 4;
             for (int dy = 0; dy < 4; dy++)
