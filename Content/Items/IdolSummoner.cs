@@ -27,7 +27,7 @@ public class IdolSummoner : ModItem
 
     public override bool? UseItem(Player p)
     {
-        if (Main.myPlayer == NetmodeID.MultiplayerClient || p.itemAnimation != p.itemAnimationMax - 1)
+        if (Main.netMode == NetmodeID.MultiplayerClient || p.itemAnimation != p.itemAnimationMax - 1)
             return false;
 
         if (ModContent.GetInstance<IdolSummoningRitualSystem>().IsActive)
