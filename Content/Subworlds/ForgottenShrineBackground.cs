@@ -301,6 +301,10 @@ public class ForgottenShrineBackground : Background
         RenderParallaxLayer(backgroundSize, 0.133f, Color.White, backgroundLayers[0].Value);
     }
 
+    /// <summary>
+    ///     Renders the moon in the sky.
+    /// </summary>
+    /// <param name="squishToFitRT">Whether the moon should be squished to fit the viewport render target.</param>
     private static void RenderMoon(bool squishToFitRT)
     {
         ResetSpriteBatch();
@@ -326,6 +330,9 @@ public class ForgottenShrineBackground : Background
         Main.spriteBatch.Draw(moon, MoonPosition, null, Color.White, 0f, moon.Size() * 0.5f, scale, 0, 0f);
     }
 
+    /// <summary>
+    ///     Renders the lantern path in the sky.
+    /// </summary>
     private static void RenderLanternBackglowPath()
     {
         float timeOffset = EasingCurves.Cubic.Evaluate(EasingType.InOut, 0f, 0.23f, LumUtils.Saturate(MoonBackglow));
@@ -344,6 +351,18 @@ public class ForgottenShrineBackground : Background
         PrimitiveRenderer.RenderTrail(lanternPathOffsets, settings, 100);
     }
 
+    /// <summary>
+    ///     Spawns a new lantern at random in the sky.
+    /// </summary>
+    private static void SpawnRandomLantern()
+    {
+        float pathInterpolant = Main.rand.NextFloat(0.05f, 1f);
+        float size = MathHelper.Lerp(2.5f, 11.5f, MathF.Pow(Main.rand.NextFloat(), 5f)) * Main.rand.NextFloat(0.4f, 1.2f);
+        Vector2 spawnPosition = MoonPosition + lanternPositionPath.Evaluate(pathInterpolant) * 1.6f + Main.rand.NextVector2Circular(210f, 210f);
+        Vector2 velocity = lanternVelocityPath.Evaluate(pathInterpolant) * -Main.rand.NextFloat(0.007f, 0.03f) * LanternSpeed;
+        lanternSystem?.CreateNew(spawnPosition, velocity, Vector2.One * size, new Color(255, Main.rand.Next(40, 150), 33) * 0.75f, pathInterpolant);
+    }
+
     public override void Update()
     {
         SkyManager.Instance["Ambience"].Deactivate();
@@ -352,13 +371,7 @@ public class ForgottenShrineBackground : Background
         if (LanternsCanSpawn)
         {
             for (int i = 0; i < 40; i++)
-            {
-                float pathInterpolant = Main.rand.NextFloat(0.05f, 1f);
-                float size = MathHelper.Lerp(2.5f, 11.5f, MathF.Pow(Main.rand.NextFloat(), 5f)) * Main.rand.NextFloat(0.4f, 1.2f);
-                Vector2 spawnPosition = MoonPosition + lanternPositionPath.Evaluate(pathInterpolant) * 1.6f + Main.rand.NextVector2Circular(210f, 210f);
-                Vector2 velocity = lanternVelocityPath.Evaluate(pathInterpolant) * -Main.rand.NextFloat(0.007f, 0.03f) * LanternSpeed;
-                lanternSystem?.CreateNew(spawnPosition, velocity, Vector2.One * size, new Color(255, Main.rand.Next(40, 150), 33) * 0.75f, pathInterpolant);
-            }
+                SpawnRandomLantern();
         }
         lanternSystem?.UpdateAll();
 

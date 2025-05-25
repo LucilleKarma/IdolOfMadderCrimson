@@ -56,6 +56,7 @@ public class ForgottenShrineDarknessSystem : ModSystem
     public override void OnModLoad()
     {
         RenderTargetManager.RenderTargetUpdateLoopEvent += ConsumeGlowActions;
+
         GlowTarget = new InstancedRequestableTarget();
         Main.ContentThatNeedsRenderTargets.Add(GlowTarget);
     }
