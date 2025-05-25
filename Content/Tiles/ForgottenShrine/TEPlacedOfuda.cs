@@ -1,4 +1,4 @@
-﻿using IdolOfMadderCrimson.Common.utils;
+﻿using IdolOfMadderCrimson.Core.Physics;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

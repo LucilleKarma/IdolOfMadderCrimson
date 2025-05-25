@@ -1,16 +1,16 @@
-﻿using IdolOfMadderCrimson.Common.Graphics;
-using IdolOfMadderCrimson.Common.utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using IdolOfMadderCrimson.Common.Graphics;
 using IdolOfMadderCrimson.Content.Particles;
 using IdolOfMadderCrimson.Content.Tiles.Generic;
+using IdolOfMadderCrimson.Core.Physics;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.DataStructures;
 using NoxusBoss.Core.Graphics.LightingMask;
 using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -281,7 +281,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
                 float playerProximityInterpolant = MathF.Max(playerProximityInterpolantTop, playerProximityInterpolantBottom);
                 if (playerProximityInterpolant > 0f && player.velocity.Length() >= 1f)
                 {
-                    ornament.InteractionAction(ornament, player, playerProximityInterpolant);
+                    ornament.InteractionAction?.Invoke(ornament, player, playerProximityInterpolant);
                     ornament.InteractionTimer = 0;
                 }
             }
@@ -291,7 +291,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         VerletRope.Update();
     }
 
-    private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, bool flipHorizontally, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
+    private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
     {
         List<Vector2> positions = [.. VerletRope.segments.Select((Rope.RopeSegment r) => r.position)];
         positions.Add(End.ToVector2());
@@ -311,7 +311,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     /// </summary>
     public override void Render()
     {
-        DrawProjectionButItActuallyWorks(ropeTexture.Value, -Main.screenPosition, false, _ => Color.White, unscaledMatrix: true);
+        DrawProjectionButItActuallyWorks(ropeTexture.Value, -Main.screenPosition, _ => Color.White, unscaledMatrix: true);
         DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.GetPoints());
         foreach (ShimenawaRopeOrnament ornament in Ornaments)
         {

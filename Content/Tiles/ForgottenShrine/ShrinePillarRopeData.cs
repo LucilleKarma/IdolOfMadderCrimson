@@ -1,5 +1,8 @@
-﻿using IdolOfMadderCrimson.Common.utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using IdolOfMadderCrimson.Content.Tiles.Generic;
+using IdolOfMadderCrimson.Core.Physics;
 using Luminance.Assets;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -7,9 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.DataStructures;
 using NoxusBoss.Core.Graphics.LightingMask;
 using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -137,7 +137,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
         VerletRope.Update();
     }
 
-    private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, bool flipHorizontally, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
+    private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
     {
         List<Vector2> positions = [.. VerletRope.segments.Select((Rope.RopeSegment r) => r.position)];
         positions.Add(End.ToVector2());
@@ -159,7 +159,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     public override void Render()
     {
         static Color ropeColorFunction(float completionRatio) => new Color(255, 28, 58);
-        DrawProjectionButItActuallyWorks(MiscTexturesRegistry.Pixel.Value, -Main.screenPosition, false, ropeColorFunction, widthFactor: 2f);
+        DrawProjectionButItActuallyWorks(MiscTexturesRegistry.Pixel.Value, -Main.screenPosition, ropeColorFunction, widthFactor: 2f);
 
         if (BeadCount >= 1)
         {

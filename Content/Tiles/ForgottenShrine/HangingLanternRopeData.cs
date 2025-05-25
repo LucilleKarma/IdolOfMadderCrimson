@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using IdolOfMadderCrimson.Content.Subworlds;
 using IdolOfMadderCrimson.Content.Tiles.Generic;
+using IdolOfMadderCrimson.Core.Physics;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
