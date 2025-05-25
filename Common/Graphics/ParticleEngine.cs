@@ -11,13 +11,11 @@ public class ParticleEngine : ILoadable
     ///     Renders over dusts.
     /// </summary>
     public static readonly ParticleRenderer Particles = new ParticleRenderer();
-    public static readonly ParticleRenderer ShaderParticles = new ParticleRenderer();
 
-    public static void Clear()
-    {
-        Particles.Clear();
-        ShaderParticles.Clear();
-    }
+    /// <summary>
+    ///     Clears all particle contents.
+    /// </summary>
+    public static void Clear() => Particles.Clear();
 
     public void Load(Mod mod)
     {
@@ -28,7 +26,6 @@ public class ParticleEngine : ILoadable
     private void UpdateParticles(On_Main.orig_UpdateParticleSystems orig, Main self)
     {
         orig(self);
-        ShaderParticles.Update();
         Particles.Update();
     }
 
@@ -36,19 +33,11 @@ public class ParticleEngine : ILoadable
     {
         orig(self);
 
-        Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
-        ShaderParticles.Settings.AnchorPosition = -Main.screenPosition;
-        ShaderParticles.Draw(Main.spriteBatch);
-        Main.spriteBatch.End();
-
         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
         Particles.Settings.AnchorPosition = -Main.screenPosition;
         Particles.Draw(Main.spriteBatch);
         Main.spriteBatch.End();
     }
 
-    public void Unload()
-    {
-
-    }
+    public void Unload() { }
 }
