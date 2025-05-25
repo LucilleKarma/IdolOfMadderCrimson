@@ -27,7 +27,7 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     private struct VertexPositionVectorTexture : IVertexType
     {
-        VertexDeclaration IVertexType.VertexDeclaration
+        readonly VertexDeclaration IVertexType.VertexDeclaration
         {
             get
             {
