@@ -66,17 +66,17 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
 
     public override void OnModLoad()
     {
-        if (Main.netMode != NetmodeID.Server)
+        if (Main.netMode == NetmodeID.Server)
+            return;
+
+        UpdateTarget = new ManagedRenderTarget(true, (width, height) =>
         {
-            UpdateTarget = new ManagedRenderTarget(true, (width, height) =>
-            {
-                return new RenderTarget2D(Main.instance.GraphicsDevice, width / 2, height / 2, true, SurfaceFormat.Vector4, DepthFormat.Depth24);
-            });
-            WaterStepRippleTarget = new ManagedRenderTarget(true, (width, height) =>
-            {
-                return new RenderTarget2D(Main.instance.GraphicsDevice, width / 2, height / 2, true, SurfaceFormat.Vector4, DepthFormat.Depth24);
-            });
-        }
+            return new RenderTarget2D(Main.instance.GraphicsDevice, width / 2, height / 2, true, SurfaceFormat.Vector4, DepthFormat.Depth24);
+        });
+        WaterStepRippleTarget = new ManagedRenderTarget(true, (width, height) =>
+        {
+            return new RenderTarget2D(Main.instance.GraphicsDevice, width / 2, height / 2, true, SurfaceFormat.Vector4, DepthFormat.Depth24);
+        });
 
         On_Main.CalculateWaterStyle += ForceShrineWater;
         On_WaterShaderData.Apply += DisableIdleLiquidDistortion;

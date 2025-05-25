@@ -30,13 +30,13 @@ public class ForgottenShrineLotusSystem : ModSystem
 
     public override void OnModLoad()
     {
-        if (Main.netMode != NetmodeID.Server)
+        if (Main.netMode == NetmodeID.Server)
+            return;
+
+        Main.QueueMainThreadAction(() =>
         {
-            Main.QueueMainThreadAction(() =>
-            {
-                lotusParticleSystem = new FramedFastParticleSystem(8, LotusCount, PrepareLotusParticleRendering, UpdateLotusParticles);
-            });
-        }
+            lotusParticleSystem = new FramedFastParticleSystem(8, LotusCount, PrepareLotusParticleRendering, UpdateLotusParticles);
+        });
 
         On_Main.DrawProjectiles += RenderLotuses;
         ForgottenShrineSystem.OnEnter += ScatterLotuses;
