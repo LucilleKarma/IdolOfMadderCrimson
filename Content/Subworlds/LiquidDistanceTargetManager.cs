@@ -98,14 +98,14 @@ public class LiquidDistanceTargetManager : ModSystem
         Main.RunOnMainThread(() =>
         {
             Indices = new DynamicIndexBuffer(Main.instance.GraphicsDevice, IndexElementSize.SixteenBits, 131072, BufferUsage.None);
-            Vertices = new DynamicVertexBuffer(Main.instance.GraphicsDevice, typeof(VertexPositionColorTexture), 32768, BufferUsage.None);
+            Vertices = new DynamicVertexBuffer(Main.instance.GraphicsDevice, typeof(VertexPositionVectorTexture), 32768, BufferUsage.None);
             liquidDistanceTarget = new ManagedRenderTarget(true, (width, height) =>
             {
                 return new RenderTarget2D(Main.instance.GraphicsDevice, width, height, true, SurfaceFormat.Vector4, DepthFormat.Depth24);
             });
         });
 
-        Main.OnPreDraw += GenerateDistanceTargetContents;
+        Main.OnPreDraw += GenerateTargetContentsWrapper;
     }
 
     public override void OnModUnload()
@@ -115,10 +115,10 @@ public class LiquidDistanceTargetManager : ModSystem
             Indices.Dispose();
             Vertices.Dispose();
         });
-        Main.OnPreDraw -= GenerateDistanceTargetContents;
+        Main.OnPreDraw -= GenerateTargetContentsWrapper;
     }
 
-    private static void GenerateDistanceTargetContents(GameTime obj)
+    private static void GenerateTargetContentsWrapper(GameTime obj)
     {
         if (!prepareLiquidDistanceTarget)
             return;
@@ -190,8 +190,8 @@ public class LiquidDistanceTargetManager : ModSystem
         Rectangle tileArea = renderProfile.TileArea;
 
         // Calculate samples.
-        float[] waterLines = new float[horizontalSamples * 2];
-        float[] tileLines = new float[horizontalSamples * 2];
+        float[] waterLines = ArrayPool<float>.Shared.Rent(horizontalSamples * 2);
+        float[] tileLines = ArrayPool<float>.Shared.Rent(horizontalSamples * 2);
         FillScanLines(renderProfile, waterLines, tileLines);
 
         // Determine depth information in two-indexed sweeps, taking advantage of natural primitive blending to ensure that the results smoothly interpolate in the final texture, rather than being
@@ -233,6 +233,10 @@ public class LiquidDistanceTargetManager : ModSystem
                     vertices[i * 2 + 1 + (j * 2 + 1) * meshWidth] = new VertexPositionVectorTexture(new Vector3(tileArea.X + i * 2 + 1, tileArea.Y + j * 2 + 1, 0f) * 16f - screenPosition3, bottomRightColor, bottomRightUv);
             }
         }
+
+        // Return requested arrays.
+        ArrayPool<float>.Shared.Return(waterLines);
+        ArrayPool<float>.Shared.Return(tileLines);
 
         // Construct index mappings.
         int currentIndex = 0;

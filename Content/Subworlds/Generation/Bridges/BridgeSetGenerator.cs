@@ -62,7 +62,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
         PlaceRopesUnderneathBridge(decorationStartY, profile);
         PlaceDecorationsUnderneathBridge(decorationStartY, 3, profile);
         PlaceOfudaUnderneathBridge(decorationStartY, 5, profile);
-        GenerateRoof(bridgeLowYPoint, profile);
+        GenerateWalledRoof(bridgeLowYPoint, profile);
     }
 
     /// <summary>
@@ -291,74 +291,17 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     /// <summary>
     ///     Generates a roof out of patterned walls and periodic rooftop tiles at the center of bridges.
     /// </summary>
-    private void GenerateRoof(int archTopY, BridgeSetPlacementProfile profile)
+    private void GenerateWalledRoof(int archTopY, BridgeSetPlacementProfile profile)
     {
         int bridgeWidth = Settings.BridgeArchWidth;
         int wallHeight = Settings.BridgeArchHeight + Settings.BridgeBackWallHeight;
-        int roofWallUndersideHeight = Settings.BridgeRoofWallUndersideHeight;
         int roofBottomY = archTopY - wallHeight;
-        int pillarSpacing = bridgeWidth / 3;
-        int pillarHeightCutoffWidth = bridgeWidth / 4;
 
         for (int x = Left; x < Right; x++)
-        {
-            int distanceFromPillar = TriangleWaveDistance(x - Left, pillarSpacing);
-            int spanIndex = x - Left;
-
-            // Scuffed solution to make pillars partially generated the left side of the bridge set.
-            if (x <= Left + 5)
-                distanceFromPillar = x - Left + 1;
-
-            float cutoffInterpolant = 1f - LumUtils.InverseLerpBump(Left, Left + pillarHeightCutoffWidth, Right - pillarHeightCutoffWidth, Right, x);
-            float easedCutoffInterpolant = 1f - MathF.Sqrt(1.001f - cutoffInterpolant.Squared());
-            int localWallHeight = (int)(wallHeight * (1f - easedCutoffInterpolant));
-
-            float patternSinusoid = MathF.Pow(6.1f, MathF.Cos(MathHelper.TwoPi * (x - Left) / bridgeWidth * 3f) - 1f);
-            int patternHeight = (int)MathF.Round(MathHelper.Lerp(3f, 1f, patternSinusoid));
-            if (InRooftopBridgeRange(x))
-                patternHeight++;
-
-            for (int y = archTopY; y >= roofBottomY; y--)
-            {
-                int height = archTopY - y;
-                if (y >= archTopY - profile.ArchHeights[spanIndex])
-                    continue;
-                if (height >= localWallHeight)
-                    continue;
-
-                // Create pillars.
-                if (distanceFromPillar == 1)
-                    WorldGen.PlaceWall(x, y, WallID.WhiteDynasty);
-                if (distanceFromPillar <= 3 && height == localWallHeight - roofWallUndersideHeight - 1)
-                    WorldGen.PlaceWall(x, y, WallID.WhiteDynasty);
-                if (distanceFromPillar == 2 && height == localWallHeight - roofWallUndersideHeight - 2)
-                    WorldGen.PlaceWall(x, y, WallID.WhiteDynasty);
-                if (distanceFromPillar == 0)
-                    WorldGen.PlaceWall(x, y, WallID.Wood);
-
-                // Create painted white dynasty tiles at the top.
-                if (height >= localWallHeight - roofWallUndersideHeight)
-                {
-                    WorldGen.KillWall(x, y);
-
-                    ushort wallID = height >= localWallHeight - patternHeight && height < localWallHeight ? WallID.AshWood : WallID.WhiteDynasty;
-                    WorldGen.PlaceWall(x, y, wallID);
-                    WorldGen.paintWall(x, y, PaintID.SkyBluePaint);
-                }
-            }
-        }
+            GenerateWalledRoof_InnerLoop(x, archTopY, profile);
 
         // Place a roof over center points on the bridge.
-        for (int x = Left; x < Right; x++)
-        {
-            int tiledBridgeSetX = CalculateXWrappedByBridgeSet(x);
-            if (tiledBridgeSetX == bridgeWidth / 2)
-            {
-                var rooftopSet = WorldGen.genRand.Next(Settings.BridgeRooftopConfigurations);
-                foreach (var rooftop in rooftopSet.Rooftops)
-                    GenerateRooftop(x, roofBottomY - rooftop.VerticalOffset + 1, rooftop.Width, rooftop.Height);
-            }
-        }
+        GenerateRooftops(bridgeWidth, roofBottomY);
 
         // Place decorations at points of descent along the bridge.
         for (int x = Left; x < Right; x++)
@@ -374,11 +317,69 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
         }
 
         // Adorn the bottom of the roof with cool things.
-        // This has be done after from the rooptop generation loop finished because otherwise the rooftops may be incomplete, making it impossible to place decorations at certain spots.
+        // This has be done after from the rooptop generation loop has finished because otherwise the rooftops may be incomplete, making it impossible to place decorations at certain spots.
         for (int x = Left; x < Right; x++)
         {
             PlaceDecorationsUnderneathRooftop(x, roofBottomY);
             PlaceDecorationsAboveTopOfArch(x, roofBottomY);
+        }
+    }
+
+    /// <summary>
+    ///     Handles the inner loop for the wall roof generation.
+    /// </summary>
+    private void GenerateWalledRoof_InnerLoop(int x, int archTopY, BridgeSetPlacementProfile profile)
+    {
+        int bridgeWidth = Settings.BridgeArchWidth;
+        int wallHeight = Settings.BridgeArchHeight + Settings.BridgeBackWallHeight;
+        int roofWallUndersideHeight = Settings.BridgeRoofWallUndersideHeight;
+        int roofBottomY = archTopY - wallHeight;
+        int pillarSpacing = bridgeWidth / 3;
+        int pillarHeightCutoffWidth = bridgeWidth / 4;
+
+        int distanceFromPillar = TriangleWaveDistance(x - Left, pillarSpacing);
+        int spanIndex = x - Left;
+
+        // Scuffed solution to make pillars partially generate near the leftmost side of the bridge set.
+        if (x <= Left + 5)
+            distanceFromPillar = x - Left + 1;
+
+        float cutoffInterpolant = 1f - LumUtils.InverseLerpBump(Left, Left + pillarHeightCutoffWidth, Right - pillarHeightCutoffWidth, Right, x);
+        float easedCutoffInterpolant = 1f - MathF.Sqrt(1.001f - cutoffInterpolant.Squared());
+        int localWallHeight = (int)(wallHeight * (1f - easedCutoffInterpolant));
+
+        float patternSinusoid = MathF.Pow(6.1f, MathF.Cos(MathHelper.TwoPi * (x - Left) / bridgeWidth * 3f) - 1f);
+        int patternHeight = (int)MathF.Round(MathHelper.Lerp(3f, 1f, patternSinusoid));
+        if (InRooftopBridgeRange(x))
+            patternHeight++;
+
+        for (int y = archTopY; y >= roofBottomY; y--)
+        {
+            int height = archTopY - y;
+            if (y >= archTopY - profile.ArchHeights[spanIndex])
+                continue;
+            if (height >= localWallHeight)
+                continue;
+
+            // Create pillars.
+            if (distanceFromPillar == 1)
+                WorldGen.PlaceWall(x, y, WallID.WhiteDynasty);
+            if (distanceFromPillar <= 3 && height == localWallHeight - roofWallUndersideHeight - 1)
+                WorldGen.PlaceWall(x, y, WallID.WhiteDynasty);
+            if (distanceFromPillar == 2 && height == localWallHeight - roofWallUndersideHeight - 2)
+                WorldGen.PlaceWall(x, y, WallID.WhiteDynasty);
+            if (distanceFromPillar == 0)
+                WorldGen.PlaceWall(x, y, WallID.Wood);
+
+            // Create painted white dynasty tiles at the top.
+            if (height >= localWallHeight - roofWallUndersideHeight)
+            {
+                WorldGen.KillWall(x, y);
+
+                ushort wallID = height >= localWallHeight - patternHeight && height < localWallHeight ? WallID.AshWood : WallID.WhiteDynasty;
+                WorldGen.PlaceWall(x, y, wallID);
+                WorldGen.paintWall(x, y, PaintID.SkyBluePaint);
+            }
         }
     }
 
@@ -438,6 +439,23 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
             Main.tile[x, roofBottomY + 2].TileType = (ushort)tapestryID;
             Main.tile[x, roofBottomY + 2].Get<TileWallWireStateData>().HasTile = true;
             TileEntity.PlaceEntityNet(x, roofBottomY + 2, ModContent.TileEntityType<TEEnigmaticTapestry>());
+        }
+    }
+
+    /// <summary>
+    ///     Generates a rooftop across the bridge.
+    /// </summary>
+    private void GenerateRooftops(int bridgeWidth, int roofBottomY)
+    {
+        for (int x = Left; x < Right; x++)
+        {
+            int tiledBridgeSetX = CalculateXWrappedByBridgeSet(x);
+            if (tiledBridgeSetX == bridgeWidth / 2)
+            {
+                var rooftopSet = WorldGen.genRand.Next(Settings.BridgeRooftopConfigurations);
+                foreach (var rooftop in rooftopSet.Rooftops)
+                    GenerateRooftop(x, roofBottomY - rooftop.VerticalOffset + 1, rooftop.Width, rooftop.Height);
+            }
         }
     }
 
