@@ -1,2 +1,18 @@
-# This file will automatically update with entries for new content after a build and reload.
+Biomes: {
+	ForgottenShrineBiome: {
+		DisplayName: Forgotten Shrine Biome
+		TownNPCDialogueName: the Forgotten Shrine Biome
+	}
+}
 
+Items: {
+	ForgottenShrineTeleporter: {
+		DisplayName: Forgotten Shrine Teleporter
+		Tooltip: ""
+	}
+
+	IdolSummoner: {
+		DisplayName: Idol Summoner
+		Tooltip: ""
+	}
+}

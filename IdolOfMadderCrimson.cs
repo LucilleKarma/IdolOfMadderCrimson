@@ -2,10 +2,9 @@
 global using WotGUtils = NoxusBoss.Core.Utilities.Utilities;
 using Terraria.ModLoader;
 
-namespace IdolOfMadderCrimson
-{
-    public class IdolOfMadderCrimson : Mod
-    {
+namespace IdolOfMadderCrimson;
 
-    }
+public class IdolOfMadderCrimson : Mod
+{
+
 }
