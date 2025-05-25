@@ -1,10 +1,10 @@
-﻿using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 using IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;
@@ -133,13 +133,18 @@ public class ShrineIslandPass : GenPass
                 if (!currentPillar.HasRopeAnchor)
                     currentPillar.RopeAnchorYInterpolant = WorldGen.genRand.NextFloat(0.55f, 0.8f);
 
-                Point start = previousPillar.RopeAnchorPosition.Value.ToPoint();
-                Point end = currentPillar.RopeAnchorPosition.Value.ToPoint();
+                Vector2? previousAnchorPosition = previousPillar.RopeAnchorPosition;
+                Vector2? currentAnchorPosition = currentPillar.RopeAnchorPosition;
+                if (previousAnchorPosition is null || currentAnchorPosition is null)
+                    continue;
+
+                Point start = previousAnchorPosition.Value.ToPoint();
+                Point end = currentAnchorPosition.Value.ToPoint();
                 int beadCount = 0;
                 if (WorldGen.genRand.NextBool())
                     beadCount = WorldGen.genRand.Next(3) + 1;
 
-                float distanceBetweenPillars = previousPillar.RopeAnchorPosition.Value.Distance(currentPillar.RopeAnchorPosition.Value);
+                float distanceBetweenPillars = previousAnchorPosition.Value.Distance(currentAnchorPosition.Value);
                 float sagFactor = WorldGen.genRand.NextFloat(0.1f, 0.16f);
                 ropesManager.Register(new ShrinePillarRopeData(start, end, beadCount, distanceBetweenPillars * sagFactor));
             }

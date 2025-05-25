@@ -87,10 +87,11 @@ public class ShrinePillarData : WorldOrientedTileObject
         Vector2 pillarBottom = bottom - Vector2.UnitY.RotatedBy(Rotation) * pillar.Height * Height;
         Main.spriteBatch.Draw(pillarTop, pillarBottom, null, Color.White, Rotation, pillarTop.Size() * new Vector2(0.5f, 1f), 1f, 0, 0f);
 
-        if (HasRopeAnchor)
+        Vector2? anchor = RopeAnchorPosition;
+        if (HasRopeAnchor && anchor.HasValue)
         {
             Texture2D ropeAnchor = ropeAnchorTexture.Value;
-            Vector2 ropePosition = RopeAnchorPosition.Value - Main.screenPosition;
+            Vector2 ropePosition = anchor.Value - Main.screenPosition;
             Main.spriteBatch.Draw(ropeAnchor, ropePosition, null, Color.White, Rotation, new Vector2(27f, 24f), 1f, 0, 0f);
         }
     }

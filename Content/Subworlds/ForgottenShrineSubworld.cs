@@ -1,4 +1,6 @@
-﻿using IdolOfMadderCrimson.Common.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using IdolOfMadderCrimson.Common.Graphics;
 using IdolOfMadderCrimson.Content.Subworlds.Generation;
 using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 using Luminance.Assets;
@@ -9,8 +11,6 @@ using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.World.WorldSaving;
 using SubworldLibrary;
-using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
@@ -133,7 +133,7 @@ public class ForgottenShrineSubworld : Subworld
         return savedWorldData;
     }
 
-    public static void LoadWorldDataFromTag(string suffix, TagCompound specialTag = null)
+    public static void LoadWorldDataFromTag(string suffix, TagCompound? specialTag = null)
     {
         TagCompound savedWorldData = specialTag ?? SubworldSystem.ReadCopiedWorldData<TagCompound>($"ShrineSavedWorldData_{suffix}");
 
