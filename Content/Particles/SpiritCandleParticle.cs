@@ -1,4 +1,5 @@
 ﻿using System;
+using IdolOfMadderCrimson.Common.Graphics;
 using IdolOfMadderCrimson.Content.Subworlds;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;

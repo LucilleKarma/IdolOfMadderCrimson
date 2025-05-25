@@ -1,4 +1,6 @@
-﻿using IdolOfMadderCrimson.Common.utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using IdolOfMadderCrimson.Content.Tiles.Generic;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
@@ -8,9 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Assets;
 using NoxusBoss.Core.DataStructures;
 using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -265,8 +264,10 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
         for (int i = 0; i < ropePositions.Length; i++)
         {
             bool locked = i == 0 || i == ropePositions.Length - 1;
-            rope.VerletRope.segments[i] = new Rope.RopeSegment(ropePositions[i]);
-            rope.VerletRope.segments[i].pinned = locked;
+            rope.VerletRope.segments[i] = new Rope.RopeSegment(ropePositions[i])
+            {
+                pinned = locked
+            };
         }
 
         return rope;
