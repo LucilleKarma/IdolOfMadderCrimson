@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using IdolOfMadderCrimson.Content.Subworlds.Generation;
+using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 using IdolOfMadderCrimson.Content.Waters;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -81,6 +84,46 @@ public class ForgottenShrineLiquidVisualsSystem : ModSystem
         On_Main.CalculateWaterStyle += ForceShrineWater;
         On_WaterShaderData.Apply += DisableIdleLiquidDistortion;
         RenderTargetManager.RenderTargetUpdateLoopEvent += UpdateTargets;
+    }
+
+    /// <summary>
+    ///     Modifies lighting such that shadows are applied in a way that suggests 3D perspective and doesn't become weirdly dark near the water surface line.
+    /// </summary>
+    /// <param name="x">The tile X position of evaluated light.</param>
+    /// <param name="x">The tile Y position of evaluated light.</param>
+    /// <param name="lightColor">The modifiable light color.</param>
+    internal static void ApplySwagTileShadows(int x, int y, ref Vector3 lightColor)
+    {
+        int shrineIslandLeft = BaseBridgePass.BridgeGenerator.Right + ForgottenShrineGenerationHelpers.LakeWidth + BaseBridgePass.GenerationSettings.DockWidth;
+        int shrineIslandWidth = ForgottenShrineGenerationHelpers.ShrineIslandWidth;
+        float islandInterpolant = LumUtils.InverseLerpBump(0f, 16f, shrineIslandWidth - 16f, shrineIslandWidth, x - shrineIslandLeft);
+
+        // Lucille's swag shadows ACTIVATE!
+        if (islandInterpolant > 0f && Main.tile[x, y].HasTile)
+        {
+            int distanceToSurface = 4;
+            for (int dy = 0; dy < 4; dy++)
+            {
+                Tile t = Framing.GetTileSafely(x, y + dy);
+                if (!t.HasTile && t.LiquidAmount >= 200)
+                {
+                    distanceToSurface = dy;
+                    break;
+                }
+
+                // Check if the tile Y frame is less than or equal to 18 to determine if it's a grass layer.
+                // This SHOULD check for the grass ID but I fear the potential performance penalties that could incur.
+                if (t.HasTile && t.TileFrameY <= 18)
+                {
+                    distanceToSurface = dy;
+                    break;
+                }
+            }
+
+            float baseShadow = LumUtils.InverseLerp(3.5f, 0.5f, distanceToSurface);
+            float easedShadow = MathF.Pow(baseShadow, 2.3f);
+            lightColor = Vector3.One * easedShadow * islandInterpolant * 0.6f;
+        }
     }
 
     // Not doing this results in beach water somehow having priority over shrine water in the outer parts of the subworld.

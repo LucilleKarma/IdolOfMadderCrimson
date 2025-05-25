@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using IdolOfMadderCrimson.Common.Graphics;
 using IdolOfMadderCrimson.Content.Subworlds.Generation;
 using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
@@ -69,37 +68,7 @@ public class ForgottenShrineSubworld : Subworld
 
     public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
     {
-        int shrineIslandLeft = BaseBridgePass.BridgeGenerator.Right + ForgottenShrineGenerationHelpers.LakeWidth + BaseBridgePass.GenerationSettings.DockWidth;
-        int shrineIslandWidth = ForgottenShrineGenerationHelpers.ShrineIslandWidth;
-        float islandInterpolant = LumUtils.InverseLerpBump(0f, 16f, shrineIslandWidth - 16f, shrineIslandWidth, x - shrineIslandLeft);
-
-        // Lucille's swag shadows ACTIVATE!
-        if (islandInterpolant > 0f && Main.tile[x, y].HasTile)
-        {
-            int distanceToSurface = 4;
-            for (int dy = 0; dy < 4; dy++)
-            {
-                Tile t = Framing.GetTileSafely(x, y + dy);
-                if (!t.HasTile && t.LiquidAmount >= 200)
-                {
-                    distanceToSurface = dy;
-                    break;
-                }
-
-                // Check if the tile Y frame is less than or equal to 18 to determine if it's a grass layer.
-                // This SHOULD check for the grass ID but I fear the potential performance penalties that could incur.
-                if (t.HasTile && t.TileFrameY <= 18)
-                {
-                    distanceToSurface = dy;
-                    break;
-                }
-            }
-
-            float baseShadow = LumUtils.InverseLerp(3.5f, 0.5f, distanceToSurface);
-            float easedShadow = MathF.Pow(baseShadow, 2.3f);
-            color = Vector3.One * easedShadow * islandInterpolant * 0.6f;
-        }
-
+        ForgottenShrineLiquidVisualsSystem.ApplySwagTileShadows(x, y, ref color);
         return false;
     }
 
