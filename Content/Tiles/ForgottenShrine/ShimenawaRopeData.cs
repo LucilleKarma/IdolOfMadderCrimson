@@ -266,7 +266,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
             }
         }
 
-        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.GetPoints());
+        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.SegmentPositions);
         foreach (ShimenawaRopeOrnament ornament in Ornaments)
         {
             Vector2 ornamentPosition = ropeCurve.Evaluate(ornament.PositionInterpolant);
@@ -312,7 +312,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     public override void Render()
     {
         DrawProjectionButItActuallyWorks(ropeTexture.Value, -Main.screenPosition, _ => Color.White, unscaledMatrix: true);
-        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.GetPoints());
+        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.SegmentPositions);
         foreach (ShimenawaRopeOrnament ornament in Ornaments)
         {
             Vector2 ornamentPosition = ropeCurve.Evaluate(ornament.PositionInterpolant);

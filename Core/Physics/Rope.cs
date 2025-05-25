@@ -2,12 +2,13 @@
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.Animations;
 
 namespace IdolOfMadderCrimson.Core.Physics;
 
 public class Rope
 {
-    public class RopeSegment
+    public struct RopeSegment
     {
         public RopeSegment(Vector2 position)
         {
@@ -24,6 +25,9 @@ public class Rope
     public Rope(Vector2 startPos, Vector2 endPos, int segmentCount, float segmentLength, Vector2 gravity, int accuracy = 10)
     {
         segments = new RopeSegment[segmentCount];
+        SegmentPositions = new Vector2[segmentCount];
+        RecalculateSegmentPositions();
+
         for (int i = 0; i < segmentCount; i++)
         {
             Vector2 segmentPos = Vector2.Lerp(startPos, endPos, i / (segmentCount - 1f));
@@ -57,7 +61,16 @@ public class Rope
     public int colliderHeight;
     public float damping;
 
-    private int accuracy;
+    /// <summary>
+    ///     The set of positions that compose this rope.
+    /// </summary>
+    public Vector2[] SegmentPositions
+    {
+        get;
+        private set;
+    }
+
+    private readonly int accuracy;
 
     /// <summary>
     ///     Calculates the overall segment length of a rope based on the horizontal span between its two end points and a desired sag distance.
@@ -114,6 +127,15 @@ public class Rope
         return result;
     }
 
+    /// <summary>
+    ///     Recalculates the <see cref="SegmentPositions"/> cache based on <see cref="Segments"/> positions.
+    /// </summary>
+    private void RecalculateSegmentPositions()
+    {
+        for (int i = 0; i < segments.Length; i++)
+            SegmentPositions[i] = segments[i].position;
+    }
+
     public void Update()
     {
         for (int i = 0; i < segments.Length; i++)
@@ -130,6 +152,8 @@ public class Rope
 
         for (int a = 0; a < accuracy; a++)
             Constrain();
+
+        RecalculateSegmentPositions();
     }
 
     public void Constrain()
@@ -165,15 +189,6 @@ public class Rope
             result.Y = 0;
 
         return result;
-    }
-
-    public Vector2[] GetPoints()
-    {
-        Vector2[] points = new Vector2[segments.Length];
-        for (int i = 0; i < segments.Length; i++)
-            points[i] = segments[i].position;
-
-        return points;
     }
 
     public Rectangle GetCollisionRect(int i) => new Rectangle((int)(segments[i].position.Floor().X + colliderOrigin.X), (int)(segments[i].position.Floor().Y + colliderOrigin.Y), colliderWidth, colliderHeight);

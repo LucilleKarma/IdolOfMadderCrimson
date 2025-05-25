@@ -100,7 +100,7 @@ public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
 
             Vector2 offsetToRTCenter = -rope.segments[0].position + WotGUtils.ViewportSize * 0.5f + Main.screenPosition;
             PrimitiveSettings settings = new PrimitiveSettings(WidthFunction, ColorFunction, Shader: overlayShader, OffsetFunction: _ => offsetToRTCenter, UseUnscaledMatrix: true, ProjectionAreaWidth: 240, ProjectionAreaHeight: 240);
-            PrimitiveRenderer.RenderTrail(rope.GetPoints(), settings, 30);
+            PrimitiveRenderer.RenderTrail(rope.SegmentPositions, settings, 30);
         });
         if (PlacedOfudaRenderer.OfudaTarget.TryGetTarget(ID, out RenderTarget2D? target) && target is not null)
         {

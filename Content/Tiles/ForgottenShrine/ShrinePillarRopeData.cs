@@ -164,7 +164,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
         if (BeadCount >= 1)
         {
             UnifiedRandom rng = new UnifiedRandom(ID);
-            DeCasteljauCurve positionCurve = new DeCasteljauCurve(VerletRope.GetPoints());
+            DeCasteljauCurve positionCurve = new DeCasteljauCurve(VerletRope.SegmentPositions);
             Texture2D beadTexture = beadsTexture.Value;
             for (int i = 0; i < BeadCount; i++)
             {
