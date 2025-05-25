@@ -46,14 +46,14 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
 
             // Place base bridge tiles.
             int extraThickness = (int)Utils.Remap(archHeightInterpolant, 0.6f, 0f, 0f, bridgeThickness * 1.25f);
-            int archStartingY = bridgeLowYPoint - archHeight;
-            PlaceBaseTiles(x, archStartingY, extraThickness);
+            int archTopY = bridgeLowYPoint - archHeight;
+            PlaceBaseTiles(x, archTopY, extraThickness);
 
             // Create walls underneath the bridge.
-            PlaceUndersideWalls(x, archHeightInterpolant, archStartingY, extraThickness);
+            PlaceUndersideWalls(x, archHeightInterpolant, archTopY, extraThickness);
 
             // Place fences atop the bridge.
-            PlaceFence(x, archStartingY, profile);
+            PlaceFence(x, archTopY, profile);
         }
 
         // Place decorations.
@@ -68,12 +68,12 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     /// <summary>
     ///     Places the base tiles for the bridge that the player can walk on.
     /// </summary>
-    private void PlaceBaseTiles(int x, int archStartingY, int extraThickness)
+    private void PlaceBaseTiles(int x, int archTopY, int extraThickness)
     {
         int bridgeThickness = Settings.BridgeThickness;
         for (int dy = -extraThickness; dy < bridgeThickness; dy++)
         {
-            int archY = archStartingY - dy;
+            int archY = archTopY - dy;
             int tileID = DetermineBaseTileIDByHeight(dy, bridgeThickness);
             WorldGen.PlaceTile(x, archY, tileID);
         }
@@ -96,7 +96,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     /// <summary>
     ///     Places guardrail fences above the bridge.
     /// </summary>
-    private void PlaceFence(int x, int archStartingY, BridgeSetPlacementProfile profile)
+    private void PlaceFence(int x, int archTopY, BridgeSetPlacementProfile profile)
     {
         int bridgeWidth = Settings.BridgeArchWidth;
         int bridgeThickness = Settings.BridgeThickness;
@@ -122,7 +122,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
 
         for (int dy = 0; dy < fenceHeight; dy++)
         {
-            int fenceY = archStartingY - bridgeThickness - dy;
+            int fenceY = archTopY - bridgeThickness - dy;
             Tile t = Main.tile[x, fenceY];
             t.TileType = (ushort)ModContent.TileType<CrimsonFence>();
             t.HasTile = true;
@@ -143,13 +143,13 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
     /// <summary>
     ///     Places walls below the bridge.
     /// </summary>
-    private void PlaceUndersideWalls(int x, float archHeightInterpolant, int archStartingY, int extraThickness)
+    private void PlaceUndersideWalls(int x, float archHeightInterpolant, int archTopY, int extraThickness)
     {
         int bridgeThickness = Settings.BridgeThickness;
         int wallHeight = (int)MathF.Round(MathHelper.Lerp(8f, 2f, MathF.Pow(archHeightInterpolant, 1.7f)));
         for (int dy = -extraThickness - wallHeight; dy < bridgeThickness - 2; dy++)
         {
-            int wallY = archStartingY - dy;
+            int wallY = archTopY - dy;
             bool isBottom = dy == -extraThickness - wallHeight;
             ushort wallID = isBottom ? WallID.RichMaogany : WallID.GreenDungeonSlab;
 
@@ -374,7 +374,7 @@ public class BridgeSetGenerator(int left, int right, BridgeGenerationSettings se
         }
 
         // Adorn the bottom of the roof with cool things.
-        // This has be done separately from the rooptop generation loop because otherwise the rooftops may be incomplete, making it impossible to place decorations at certain spots.
+        // This has be done after from the rooptop generation loop finished because otherwise the rooftops may be incomplete, making it impossible to place decorations at certain spots.
         for (int x = Left; x < Right; x++)
         {
             PlaceDecorationsUnderneathRooftop(x, roofBottomY);
