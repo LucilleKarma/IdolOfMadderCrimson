@@ -1,8 +1,8 @@
-﻿using IdolOfMadderCrimson.Content.Subworlds;
+﻿using System.Linq;
+using System.Threading;
+using IdolOfMadderCrimson.Content.Subworlds;
 using IdolOfMadderCrimson.Content.Tiles.Generic;
 using Luminance.Common.Utilities;
-using System.Linq;
-using System.Threading;
 using Terraria;
 
 namespace IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
@@ -24,7 +24,7 @@ public class OrnamentalShrineRopeSystem : WorldOrientedTileObjectManager<Ornamen
         foreach (OrnamentalShrineRopeData rope in TileObjects)
         {
             for (int i = 0; i < 4; i++)
-                rope.VerletRope.Settle();
+                rope.VerletRope?.Settle();
         }
     }
 

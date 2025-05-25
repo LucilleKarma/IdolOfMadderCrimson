@@ -65,15 +65,16 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
         {
             end = value;
             Vector2 endVector = end.ToVector2();
-            VerletRope.segments[^1].position = endVector;
-            VerletRope.segments[^1].oldPosition = endVector;
+
+            if (VerletRope is RopeHandle rope)
+                rope.End = endVector;
         }
     }
 
     /// <summary>
     ///     The verlet segments associated with this rope.
     /// </summary>
-    public readonly Rope VerletRope;
+    public readonly RopeHandle? VerletRope;
 
     /// <summary>
     ///     The maximum length of this rope.
@@ -102,45 +103,28 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
         Position = start;
         this.end = end;
 
-        MaxLength = Rope.CalculateSegmentLength(Vector2.Distance(Start.ToVector2(), End.ToVector2()), Sag);
+        MaxLength = RopeManagerSystem.CalculateSegmentLength(Vector2.Distance(Start.ToVector2(), End.ToVector2()), Sag);
 
         int segmentCount = 30;
-        VerletRope = new Rope(startVector, endVector, segmentCount, MaxLength / segmentCount, Vector2.UnitY * Gravity, 12)
+        VerletRope = ModContent.GetInstance<RopeManagerSystem>().RequestNew(startVector, endVector, segmentCount, MaxLength / segmentCount, Vector2.UnitY * Gravity, new RopeSettings()
         {
-            tileCollide = true
-        };
-    }
-
-    /// <summary>
-    ///     Updates this rope.
-    /// </summary>
-    public override void Update()
-    {
-        // Only do tile collision checks if a player is close, to save on performance.
-        Vector2 segmentCenter = VerletRope.segments[VerletRope.segments.Length / 2].position;
-        bool playerNearby = Main.player[Player.FindClosest(segmentCenter, 1, 1)].WithinRange(segmentCenter, 1900f);
-        VerletRope.tileCollide = playerNearby;
-
-        for (int i = 0; i < VerletRope.segments.Length; i++)
-        {
-            Rope.RopeSegment ropeSegment = VerletRope.segments[i];
-            if (ropeSegment.pinned)
-                continue;
-
-            foreach (Player player in Main.ActivePlayers)
-            {
-                float playerProximityInterpolant = LumUtils.InverseLerp(30f, 10f, player.Distance(ropeSegment.position));
-                ropeSegment.position += player.velocity * playerProximityInterpolant * 0.4f;
-            }
-        }
-
-        VerletRope.Update();
+            TileColliderArea = Vector2.One * 5f,
+            StartIsFixed = true,
+            EndIsFixed = true,
+            Mass = 0.5f,
+            RespondToEntityMovement = true,
+            RespondToWind = true
+        }, 12);
     }
 
     private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
     {
-        List<Vector2> positions = [.. VerletRope.segments.Select((Rope.RopeSegment r) => r.position)];
+        if (VerletRope is not RopeHandle rope)
+            return;
+
+        List<Vector2> positions = rope.Positions.ToList();
         positions.Add(End.ToVector2());
+
         ManagedShader overlayShader = ShaderManager.GetShader("IdolOfMadderCrimson.LitPrimitiveOverlayShader");
         overlayShader.TrySetParameter("exposure", 1f);
         overlayShader.TrySetParameter("screenSize", WotGUtils.ViewportSize);
@@ -158,13 +142,16 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
     /// </summary>
     public override void Render()
     {
+        if (VerletRope is not RopeHandle rope)
+            return;
+
         static Color ropeColorFunction(float completionRatio) => new Color(255, 28, 58);
         DrawProjectionButItActuallyWorks(MiscTexturesRegistry.Pixel.Value, -Main.screenPosition, ropeColorFunction, widthFactor: 2f);
 
         if (BeadCount >= 1)
         {
             UnifiedRandom rng = new UnifiedRandom(ID);
-            DeCasteljauCurve positionCurve = new DeCasteljauCurve(VerletRope.SegmentPositions);
+            DeCasteljauCurve positionCurve = new DeCasteljauCurve(rope.Positions.ToArray());
             Texture2D beadTexture = beadsTexture.Value;
             for (int i = 0; i < BeadCount; i++)
             {
@@ -194,8 +181,7 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
             ["Sag"] = Sag,
             ["BeadCount"] = BeadCount,
             ["MaxLength"] = MaxLength,
-            ["ID"] = ID,
-            ["RopePositions"] = VerletRope.segments.Select(p => p.position.ToPoint()).ToList()
+            ["ID"] = ID
         };
     }
 
@@ -209,16 +195,6 @@ public class ShrinePillarRopeData : WorldOrientedTileObject
             MaxLength = tag.GetFloat("MaxLength"),
             ID = tag.GetInt("ID")
         };
-        Vector2[] ropePositions = [.. tag.Get<Point[]>("RopePositions").Select(p => p.ToVector2())];
-
-        rope.VerletRope.segments = new Rope.RopeSegment[ropePositions.Length];
-        for (int i = 0; i < ropePositions.Length; i++)
-        {
-            bool locked = i == 0 || i == ropePositions.Length - 1;
-            rope.VerletRope.segments[i] = new Rope.RopeSegment(ropePositions[i]);
-            rope.VerletRope.segments[i].pinned = locked;
-        }
-
         return rope;
     }
 }

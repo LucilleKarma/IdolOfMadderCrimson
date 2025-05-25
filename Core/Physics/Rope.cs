@@ -2,64 +2,37 @@
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Animations;
 
 namespace IdolOfMadderCrimson.Core.Physics;
 
-public class Rope
+internal class Rope
 {
-    public struct RopeSegment
+    /// <summary>
+    ///     A 0-1 interpolant which dictates a dampning factor for velocity integration increments.
+    /// </summary>
+    private float MovementSpeedDampingCoefficient
     {
-        public RopeSegment(Vector2 position)
-        {
-            this.position = position;
-            oldPosition = position;
-        }
-
-        public Vector2 position;
-        public Vector2 oldPosition;
-        public Vector2 velocity;
-        public bool pinned;
+        get;
+        set;
     }
 
-    public Rope(Vector2 startPos, Vector2 endPos, int segmentCount, float segmentLength, Vector2 gravity, int accuracy = 10)
+    /// <summary>
+    ///     A timer that increments in respond to wind, assuming wind response is enabled in the <see cref="Settings"/>.
+    /// </summary>
+    private float WindTime
     {
-        segments = new RopeSegment[segmentCount];
-        SegmentPositions = new Vector2[segmentCount];
-        RecalculateSegmentPositions();
-
-        for (int i = 0; i < segmentCount; i++)
-        {
-            Vector2 segmentPos = Vector2.Lerp(startPos, endPos, i / (segmentCount - 1f));
-            segments[i] = new RopeSegment(segmentPos);
-        }
-        segments[0].pinned = true;
-        segments[^1].pinned = true;
-
-        this.segmentLength = segmentLength;
-        this.gravity = gravity;
-        this.accuracy = accuracy;
+        get;
+        set;
     }
 
-    public void Settle()
+    /// <summary>
+    ///     The set of segments that compose this rope.
+    /// </summary>
+    public RopeSegment[] Segments
     {
-        float oldDamp = damping;
-        damping = 0.67f;
-        for (int a = 0; a < segments.Length; a++)
-            Update();
-
-        damping = oldDamp;
+        get;
+        set;
     }
-
-    public RopeSegment[] segments;
-    public float segmentLength;
-    public Vector2 gravity;
-
-    public bool tileCollide;
-    public Vector2 colliderOrigin;
-    public int colliderWidth;
-    public int colliderHeight;
-    public float damping;
 
     /// <summary>
     ///     The set of positions that compose this rope.
@@ -70,61 +43,66 @@ public class Rope
         private set;
     }
 
-    private readonly int accuracy;
-
     /// <summary>
-    ///     Calculates the overall segment length of a rope based on the horizontal span between its two end points and a desired sag distance.
+    ///     The desired distance between each segment on the rope.
     /// </summary>
-    public static float CalculateSegmentLength(float ropeSpan, float sag)
+    public float DistancePerSegment
     {
-        // A rope at rest is defined via a catenary curve, which exists in the following mathematical form:
-        // y(x) = a * cosh(x / a)
-
-        // Furthermore, the length of a rope, given the horizontal width w for a rope, is defined as follows:
-        // L = 2a * sinh(w / 2a)
-
-        // In order to use the above equation, the value of a must be determined for the catenary that this rope will form.
-        // To do so, a numerical solution will need to be found based on the known width and sag values.
-
-        // Suppose the two supports are at equal height at distances -w/2 and w/2.
-        // From this, sag (which will be denoted with h) can be defined in the following way: h = y(w/2) - y(0)
-        // Reducing this results in the following equation:
-
-        // h = a(cosh(w / 2a) - 1)
-        // a(cosh(w / 2a) - 1) - h = 0
-        // This can be used to numerically find a.
-        float initialGuessA = sag;
-        float a = (float)IterativelySearchForRoot(x =>
-        {
-            return x * (Math.Cosh(ropeSpan / x * 0.5) - 1D) - sag;
-        }, initialGuessA, 9);
-
-        // Now that a is known, it's just a matter of plugging it back into the original equation to find L.
-        return MathF.Sinh(ropeSpan / a * 0.5f) * a * 2f;
+        get;
+        set;
     }
 
     /// <summary>
-    ///     Searches for an approximate for a root of a given function.
+    ///     The gravity force to exert on the rope when updating.
     /// </summary>
-    ///     <param name="fx">The function to find the root for.</param>
-    ///     <param name="initialGuess">The initial guess for what the root could be.</param>
-    ///     <param name="iterations">The amount of iterations to perform. The higher this is, the more generally accurate the result will be.</param>
-    private static double IterativelySearchForRoot(Func<double, double> fx, double initialGuess, int iterations)
+    public Vector2 Gravity
     {
-        // This uses the Newton-Raphson method to iteratively get closer and closer to roots of a given function.
-        // The exactly formula is as follows:
-        // x = x - f(x) / f'(x)
-        // In most circumstances repeating the above equation will result in closer and closer approximations to a root.
-        // The exact reason as to why this intuitively works can be found at the following video:
-        // https://www.youtube.com/watch?v=-RdOwhmqP5s
-        double result = initialGuess;
-        for (int i = 0; i < iterations; i++)
+        get;
+        set;
+    }
+
+    /// <summary>
+    ///     The amount of steps to perform when constraining tiles to their desired lengths. Higher values equate to greater accuracy, but reduced performance.
+    /// </summary>
+    public int ConstraintSteps
+    {
+        get;
+        private set;
+    }
+
+    /// <summary>
+    ///     Sets of settings that dictate how this rope should behave.
+    /// </summary>
+    public RopeSettings Settings
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    ///     Whether this rope should collide with tiles or not.
+    /// </summary>
+    public bool InteractWithTiles => Settings.TileColliderArea is not null;
+
+    public Rope(Vector2 start, Vector2 end, int segmentCount, float distancePerSegment, Vector2 gravity, RopeSettings settings, int constraintSteps = 10)
+    {
+        Segments = new RopeSegment[segmentCount];
+        SegmentPositions = new Vector2[segmentCount];
+        for (int i = 0; i < segmentCount; i++)
         {
-            double derivative = fx.ApproximateDerivative(result);
-            result -= fx(result) / derivative;
+            Vector2 segmentPos = Vector2.Lerp(start, end, i / (segmentCount - 1f));
+            Segments[i] = new RopeSegment(segmentPos);
         }
 
-        return result;
+        Segments[0].FixedInPlace = settings.StartIsFixed;
+        Segments[^1].FixedInPlace = settings.EndIsFixed;
+        RecalculateSegmentPositions();
+
+        DistancePerSegment = distancePerSegment;
+        Gravity = gravity;
+        ConstraintSteps = constraintSteps;
+
+        Settings = settings;
     }
 
     /// <summary>
@@ -132,64 +110,121 @@ public class Rope
     /// </summary>
     private void RecalculateSegmentPositions()
     {
-        for (int i = 0; i < segments.Length; i++)
-            SegmentPositions[i] = segments[i].position;
+        for (int i = 0; i < Segments.Length; i++)
+            SegmentPositions[i] = Segments[i].Position;
     }
 
-    public void Update()
+    /// <summary>
+    ///     Moves a given position around, obeying tile interaction rules if this rope requires them.
+    /// </summary>
+    /// <param name="position">The position vector to move.</param>
+    /// <param name="baseVelocity">The base velocity to consider.</param>
+    private void Move(ref Vector2 position, Vector2 baseVelocity)
     {
-        for (int i = 0; i < segments.Length; i++)
+        // Apply standard Eulerian integration if tile interactions are not required.
+        if (!InteractWithTiles || Settings.TileColliderArea is null)
         {
-            segments[i].velocity = (segments[i].position - segments[i].oldPosition) * (1f - damping);
-            if (segments[i].velocity.Length() < 0.015f)
-                segments[i].velocity = Vector2.Zero;
-
-            segments[i].oldPosition = segments[i].position;
-
-            if (!segments[i].pinned)
-                segments[i].position += TileCollision(segments[i].position, segments[i].velocity + gravity);
+            position += baseVelocity;
+            return;
         }
 
-        for (int a = 0; a < accuracy; a++)
+        // If tile interactions *are* required, handle them before moving forward.
+        int width = (int)Settings.TileColliderArea.Value.X;
+        int height = (int)Settings.TileColliderArea.Value.Y;
+        Vector2 newVelocity = Collision.noSlopeCollision(position, baseVelocity, width, height + 2, true, true);
+        newVelocity = Collision.noSlopeCollision(position, newVelocity, width, height, true, true);
+        Vector2 finalVelocity = baseVelocity;
+        if (Math.Abs(baseVelocity.X) > Math.Abs(newVelocity.X))
+            finalVelocity.X = 0f;
+        if (Math.Abs(baseVelocity.Y) > Math.Abs(newVelocity.Y))
+            finalVelocity.Y = 0f;
+
+        position += finalVelocity;
+    }
+
+    /// <summary>
+    ///     Updates this rope, making it move around.
+    /// </summary>
+    public void Update()
+    {
+        for (int i = 0; i < Segments.Length; i++)
+        {
+            Vector2 movementStep = (Segments[i].Position - Segments[i].OldPosition) * (1f - MovementSpeedDampingCoefficient);
+            if (movementStep.Length() < 0.02f)
+                movementStep = Vector2.Zero;
+
+            Segments[i].OldPosition = Segments[i].Position;
+
+            if (!Segments[i].FixedInPlace)
+                Move(ref Segments[i].Position, movementStep + Gravity);
+        }
+
+        for (int i = 0; i < ConstraintSteps; i++)
             Constrain();
 
         RecalculateSegmentPositions();
+
+        if (Settings.RespondToEntityMovement)
+            HandleEntityMovementResponse();
+        if (Settings.RespondToWind)
+            HandleWindResponse();
     }
 
-    public void Constrain()
+    /// <summary>
+    ///     Makes this rope respond to the movement of entities.
+    /// </summary>
+    private void HandleEntityMovementResponse()
     {
-        for (int i = 0; i < segments.Length - 1; i++)
+        for (int i = 0; i < Segments.Length; i++)
         {
-            float dist = segments[i].position.Distance(segments[i + 1].position);
-            float error = dist - segmentLength;
-            Vector2 correction = segments[i].position.DirectionFrom(segments[i + 1].position) * error;
+            ref RopeSegment ropeSegment = ref Segments[i];
+            if (ropeSegment.FixedInPlace)
+                continue;
 
-            bool pinned = segments[i].pinned;
-            bool nextPinned = segments[i + 1].pinned;
-            float multiplier = pinned || nextPinned ? 1f : 0.5f;
-
-            if (!pinned)
-                segments[i].position -= TileCollision(segments[i].position, correction * multiplier);
-            if (!nextPinned)
-                segments[i + 1].position += TileCollision(segments[i + 1].position, correction * multiplier);
+            foreach (Player player in Main.ActivePlayers)
+            {
+                float playerProximityInterpolant = LumUtils.InverseLerp(37f, 10f, player.Distance(ropeSegment.Position));
+                ropeSegment.Position += player.velocity * playerProximityInterpolant / Settings.Mass * 0.08f;
+            }
         }
     }
 
-    private Vector2 TileCollision(Vector2 position, Vector2 velocity)
+    /// <summary>
+    ///     Makes this entity respond to wind.
+    /// </summary>
+    private void HandleWindResponse()
     {
-        if (!tileCollide)
-            return velocity;
+        WindTime += Main.windSpeedCurrent / 60f;
+        if (MathF.Abs(WindTime) >= 4000f)
+            WindTime = 0f;
 
-        Vector2 newVelocity = Collision.noSlopeCollision(position + colliderOrigin, velocity, colliderWidth, colliderHeight + 2, true, true);
-        newVelocity = Collision.noSlopeCollision(position + colliderOrigin, newVelocity, colliderWidth, colliderHeight, true, true);
-        Vector2 result = velocity;
-        if (Math.Abs(velocity.X) > Math.Abs(newVelocity.X))
-            result.X = 0;
-        if (Math.Abs(velocity.Y) > Math.Abs(newVelocity.Y))
-            result.Y = 0;
+        float windSpeed = Math.Clamp(Main.WindForVisuals * 2f, -1.3f, 1.3f);
+        float windWave = MathF.Cos(WindTime * 3.42f + Segments[0].Position.Length() * 0.06f);
+        Vector2 wind = Vector2.UnitX * (windWave + Main.windSpeedCurrent) * -0.2f;
 
-        return result;
+        Segments[^1].Position += wind * LumUtils.InverseLerp(0.3f, 0.75f, windSpeed) / Settings.Mass;
     }
 
-    public Rectangle GetCollisionRect(int i) => new Rectangle((int)(segments[i].position.Floor().X + colliderOrigin.X), (int)(segments[i].position.Floor().Y + colliderOrigin.Y), colliderWidth, colliderHeight);
+    /// <summary>
+    ///     Constrains segments on this rope, conserving their overall length.
+    /// </summary>
+    public void Constrain()
+    {
+        for (int i = 0; i < Segments.Length - 1; i++)
+        {
+            // Determine how much each segment has to move in order to return to its desired resting distance.
+            float segmentLength = Segments[i].Position.Distance(Segments[i + 1].Position);
+            float distanceFromIdealLength = segmentLength - DistancePerSegment;
+            Vector2 correctiveForce = Segments[i + 1].Position.SafeDirectionTo(Segments[i].Position) * distanceFromIdealLength;
+
+            bool pinned = Segments[i].FixedInPlace;
+            bool nextPinned = Segments[i + 1].FixedInPlace;
+            correctiveForce *= pinned || nextPinned ? 1f : 0.5f;
+
+            if (!pinned)
+                Move(ref Segments[i].Position, -correctiveForce);
+            if (!nextPinned)
+                Move(ref Segments[i + 1].Position, correctiveForce);
+        }
+    }
 }

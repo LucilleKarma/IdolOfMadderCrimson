@@ -60,15 +60,15 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
             Vector2 endVector = end.ToVector2();
             ClampToMaxLength(ref endVector);
 
-            VerletRope.segments[^1].position = endVector;
-            VerletRope.segments[^1].oldPosition = endVector;
+            if (VerletRope is RopeHandle rope)
+                rope.End = endVector;
         }
     }
 
     /// <summary>
     ///     The verlet segments associated with this rope.
     /// </summary>
-    public readonly Rope VerletRope;
+    public readonly RopeHandle? VerletRope;
 
     /// <summary>
     ///     The maximum length of this rope.
@@ -100,13 +100,17 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
         Position = start;
         this.end = end;
 
-        MaxLength = Rope.CalculateSegmentLength(Vector2.Distance(Start.ToVector2(), End.ToVector2()), Sag);
+        MaxLength = RopeManagerSystem.CalculateSegmentLength(Vector2.Distance(Start.ToVector2(), End.ToVector2()), Sag);
 
         int segmentCount = 30;
-        VerletRope = new Rope(startVector, endVector, segmentCount, MaxLength / segmentCount, Vector2.UnitY * Gravity, 15)
+        VerletRope = ModContent.GetInstance<RopeManagerSystem>().RequestNew(startVector, endVector, segmentCount, MaxLength / segmentCount, Vector2.UnitY * Gravity, new RopeSettings()
         {
-            tileCollide = true
-        };
+            TileColliderArea = Vector2.One * 5f,
+            StartIsFixed = true,
+            EndIsFixed = true,
+            RespondToEntityMovement = true,
+            RespondToWind = false // Handled manually.
+        }, 15);
     }
 
     private void ClampToMaxLength(ref Vector2 end)
@@ -126,33 +130,18 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
         if (startHasNoTile || endHasNoTile)
         {
             ModContent.GetInstance<OrnamentalShrineRopeSystem>().Remove(this);
+            VerletRope?.Dispose();
             return;
         }
 
-        // Only do tile collision checks if a player is close, to save on performance.
-        Vector2 segmentCenter = VerletRope.segments[VerletRope.segments.Length / 2].position;
-        bool playerNearby = Main.player[Player.FindClosest(segmentCenter, 1, 1)].WithinRange(segmentCenter, 1900f);
-        VerletRope.tileCollide = playerNearby;
-
-        for (int i = 0; i < VerletRope.segments.Length; i++)
-        {
-            Rope.RopeSegment ropeSegment = VerletRope.segments[i];
-            if (ropeSegment.pinned)
-                continue;
-
-            foreach (Player player in Main.ActivePlayers)
-            {
-                float playerProximityInterpolant = LumUtils.InverseLerp(30f, 10f, player.Distance(ropeSegment.position));
-                ropeSegment.position += player.velocity * playerProximityInterpolant * 0.4f;
-            }
-        }
-
         WindTime = (WindTime + MathF.Abs(Main.windSpeedCurrent) * 0.11f) % (MathHelper.TwoPi * 5000f);
-        VerletRope.Update();
     }
 
     private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, bool flipHorizontally, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
     {
+        if (VerletRope is not RopeHandle rope)
+            return;
+
         ManagedShader shader = ShaderManager.GetShader("NoxusBoss.PrimitiveProjection");
         Main.instance.GraphicsDevice.Textures[1] = projection;
         Main.instance.GraphicsDevice.SamplerStates[1] = SamplerState.AnisotropicClamp;
@@ -160,7 +149,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
         shader.TrySetParameter("horizontalFlip", flipHorizontally);
         shader.TrySetParameter("heightRatio", (float)projection.Height / projection.Width);
         shader.TrySetParameter("lengthRatio", 1f);
-        List<Vector2> positions = [.. VerletRope.segments.Select((Rope.RopeSegment r) => r.position)];
+        List<Vector2> positions = rope.Positions.ToList();
         positions.Add(End.ToVector2());
 
         PrimitiveSettings settings = new PrimitiveSettings((float _) => projection.Width * widthFactor, colorFunction.Invoke, (float _) => drawOffset + Main.screenPosition, Smoothen: true, Pixelate: false, shader, projectionWidth, projectionHeight, unscaledMatrix);
@@ -172,14 +161,13 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
     /// </summary>
     public override void Render()
     {
-        Color ropeColorFunction(float completionRatio) => new Color(63, 22, 32);
+        if (VerletRope is not RopeHandle rope)
+            return;
+
+        static Color ropeColorFunction(float completionRatio) => new Color(63, 22, 32);
         DrawProjectionButItActuallyWorks(MiscTexturesRegistry.Pixel.Value, -Main.screenPosition, false, ropeColorFunction, widthFactor: 2f);
 
-        Vector2[] curveControlPoints = new Vector2[VerletRope.segments.Length];
-        for (int i = 0; i < curveControlPoints.Length; i++)
-            curveControlPoints[i] = VerletRope.segments[i].position;
-
-        DeCasteljauCurve positionCurve = new DeCasteljauCurve(curveControlPoints);
+        DeCasteljauCurve positionCurve = new DeCasteljauCurve(rope.Positions.ToArray());
 
         Main.instance.LoadProjectile(ProjectileID.ReleaseLantern);
 
@@ -194,6 +182,9 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
 
             int windGridTime = 33;
             Point ornamentTilePosition = ornamentWorldPosition.ToTileCoordinates();
+            if (!WorldGen.InWorld(ornamentTilePosition.X, ornamentTilePosition.Y))
+                continue;
+
             Main.instance.TilesRenderer.Wind.GetWindTime(ornamentTilePosition.X, ornamentTilePosition.Y, windGridTime, out int windTimeLeft, out int direction, out _);
             float windGridInterpolant = windTimeLeft / (float)windGridTime;
             float windGridRotation = Utils.GetLerpValue(0f, 0.5f, windGridInterpolant, true) * Utils.GetLerpValue(1f, 0.5f, windGridInterpolant, true) * direction * -0.93f;
@@ -245,8 +236,7 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
             ["Start"] = Start,
             ["End"] = End,
             ["Sag"] = Sag,
-            ["MaxLength"] = MaxLength,
-            ["RopePositions"] = VerletRope.segments.Select(p => p.position.ToPoint()).ToList()
+            ["MaxLength"] = MaxLength
         };
     }
 
@@ -259,18 +249,6 @@ public class OrnamentalShrineRopeData : WorldOrientedTileObject
         {
             MaxLength = tag.GetFloat("MaxLength")
         };
-        Vector2[] ropePositions = [.. tag.Get<Point[]>("RopePositions").Select(p => p.ToVector2())];
-
-        rope.VerletRope.segments = new Rope.RopeSegment[ropePositions.Length];
-        for (int i = 0; i < ropePositions.Length; i++)
-        {
-            bool locked = i == 0 || i == ropePositions.Length - 1;
-            rope.VerletRope.segments[i] = new Rope.RopeSegment(ropePositions[i])
-            {
-                pinned = locked
-            };
-        }
-
         return rope;
     }
 }

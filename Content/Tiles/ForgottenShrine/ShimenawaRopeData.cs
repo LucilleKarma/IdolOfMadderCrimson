@@ -161,15 +161,16 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         {
             end = value;
             Vector2 endVector = end.ToVector2();
-            VerletRope.segments[^1].position = endVector;
-            VerletRope.segments[^1].oldPosition = endVector;
+
+            if (VerletRope is RopeHandle rope)
+                rope.End = endVector;
         }
     }
 
     /// <summary>
     ///     The verlet segments associated with this rope.
     /// </summary>
-    public readonly Rope VerletRope;
+    public readonly RopeHandle? VerletRope;
 
     /// <summary>
     ///     The maximum length of this rope.
@@ -208,13 +209,18 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         Position = start;
         this.end = end;
 
-        MaxLength = Rope.CalculateSegmentLength(Vector2.Distance(Start.ToVector2(), End.ToVector2()), Sag);
+        MaxLength = RopeManagerSystem.CalculateSegmentLength(Vector2.Distance(Start.ToVector2(), End.ToVector2()), Sag);
 
         int segmentCount = 30;
-        VerletRope = new Rope(startVector, endVector, segmentCount, MaxLength / segmentCount, Vector2.UnitY * Gravity, 12)
+        VerletRope = ModContent.GetInstance<RopeManagerSystem>().RequestNew(startVector, endVector, segmentCount, MaxLength / segmentCount, Vector2.UnitY * Gravity, new RopeSettings()
         {
-            tileCollide = true
-        };
+            StartIsFixed = true,
+            EndIsFixed = true,
+            TileColliderArea = Vector2.One * 8f,
+            RespondToEntityMovement = true,
+            RespondToWind = true,
+            Mass = 0.85f
+        }, 12);
     }
 
     private static void StandardOrnamentInteraction(ShimenawaRopeOrnament ornament, Player player, float playerProximityInterpolant)
@@ -248,25 +254,10 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     /// </summary>
     public override void Update()
     {
-        // Only do tile collision checks if a player is close, to save on performance.
-        Vector2 segmentCenter = VerletRope.segments[VerletRope.segments.Length / 2].position;
-        bool playerNearby = Main.player[Player.FindClosest(segmentCenter, 1, 1)].WithinRange(segmentCenter, 1900f);
-        VerletRope.tileCollide = playerNearby;
+        if (VerletRope is not RopeHandle rope)
+            return;
 
-        for (int i = 0; i < VerletRope.segments.Length; i++)
-        {
-            Rope.RopeSegment ropeSegment = VerletRope.segments[i];
-            if (ropeSegment.pinned)
-                continue;
-
-            foreach (Player player in Main.ActivePlayers)
-            {
-                float playerProximityInterpolant = LumUtils.InverseLerp(30f, 10f, player.Distance(ropeSegment.position));
-                ropeSegment.position += player.velocity * playerProximityInterpolant * 0.24f;
-            }
-        }
-
-        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.SegmentPositions);
+        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(rope.Positions.ToArray());
         foreach (ShimenawaRopeOrnament ornament in Ornaments)
         {
             Vector2 ornamentPosition = ropeCurve.Evaluate(ornament.PositionInterpolant);
@@ -287,14 +278,16 @@ public class ShimenawaRopeData : WorldOrientedTileObject
             }
             ornament.Update();
         }
-
-        VerletRope.Update();
     }
 
     private void DrawProjectionButItActuallyWorks(Texture2D projection, Vector2 drawOffset, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, bool unscaledMatrix = false)
     {
-        List<Vector2> positions = [.. VerletRope.segments.Select((Rope.RopeSegment r) => r.position)];
+        if (VerletRope is not RopeHandle rope)
+            return;
+
+        List<Vector2> positions = rope.Positions.ToList();
         positions.Add(End.ToVector2());
+
         ManagedShader overlayShader = ShaderManager.GetShader("IdolOfMadderCrimson.ShimenawaRopeShader");
         overlayShader.TrySetParameter("screenSize", WotGUtils.ViewportSize);
         overlayShader.TrySetParameter("zoom", Main.GameViewMatrix.Zoom);
@@ -311,8 +304,11 @@ public class ShimenawaRopeData : WorldOrientedTileObject
     /// </summary>
     public override void Render()
     {
+        if (VerletRope is not RopeHandle rope)
+            return;
+
         DrawProjectionButItActuallyWorks(ropeTexture.Value, -Main.screenPosition, _ => Color.White, unscaledMatrix: true);
-        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(VerletRope.SegmentPositions);
+        DeCasteljauCurve ropeCurve = new DeCasteljauCurve(rope.Positions.ToArray());
         foreach (ShimenawaRopeOrnament ornament in Ornaments)
         {
             Vector2 ornamentPosition = ropeCurve.Evaluate(ornament.PositionInterpolant);
@@ -331,8 +327,7 @@ public class ShimenawaRopeData : WorldOrientedTileObject
             ["Start"] = Start,
             ["End"] = End,
             ["Sag"] = Sag,
-            ["MaxLength"] = MaxLength,
-            ["RopePositions"] = VerletRope.segments.Select(p => p.position.ToPoint()).ToList()
+            ["MaxLength"] = MaxLength
         };
     }
 
@@ -345,15 +340,6 @@ public class ShimenawaRopeData : WorldOrientedTileObject
         {
             MaxLength = tag.GetFloat("MaxLength")
         };
-        Vector2[] ropePositions = [.. tag.Get<Point[]>("RopePositions").Select(p => p.ToVector2())];
-
-        rope.VerletRope.segments = new Rope.RopeSegment[ropePositions.Length];
-        for (int i = 0; i < ropePositions.Length; i++)
-        {
-            bool locked = i == 0 || i == ropePositions.Length - 1;
-            rope.VerletRope.segments[i] = new Rope.RopeSegment(ropePositions[i]);
-            rope.VerletRope.segments[i].pinned = locked;
-        }
 
         return rope;
     }

@@ -12,7 +12,7 @@ namespace IdolOfMadderCrimson.Content.Tiles.ForgottenShrine;
 
 public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
 {
-    private Rope rope;
+    private RopeHandle? Rope;
 
     private static readonly Asset<Texture2D>[] ofudaTextures =
     [
@@ -47,29 +47,23 @@ public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
     {
         Vector2 start = Position.ToWorldCoordinates(0f, 0f);
         Vector2 end = start + Vector2.UnitY * 93f;
-        if (rope is null)
+        if (Rope is null)
         {
             int segmentCount = 10;
-            rope = new Rope(start, end, segmentCount, start.Distance(end) / segmentCount, Vector2.UnitY * 0.3f, 5);
-            rope.segments[^1].pinned = false;
-            rope.tileCollide = true;
-            rope.Settle();
-        }
-
-        rope.segments[0].position = start;
-        for (int i = 0; i < rope.segments.Length; i++)
-        {
-            Rope.RopeSegment segment = rope.segments[i];
-            if (segment.pinned)
-                continue;
-
-            foreach (Player player in Main.ActivePlayers)
+            Rope = ModContent.GetInstance<RopeManagerSystem>().RequestNew(start, end, segmentCount, start.Distance(end) / segmentCount, Vector2.UnitY * 0.3f, new RopeSettings()
             {
-                float playerProximityInterpolant = LumUtils.InverseLerp(40f, 12f, player.Distance(segment.position));
-                segment.position.X += player.velocity.X * playerProximityInterpolant * 0.06f;
-            }
+                StartIsFixed = true,
+                TileColliderArea = Vector2.One * 8f,
+                Mass = 0.5f,
+                RespondToWind = true,
+                RespondToEntityMovement = true
+            }, 5);
         }
-        rope.Update();
+
+        if (Rope is not RopeHandle rope)
+            return;
+
+        rope.Start = start;
     }
 
     /// <summary>
@@ -79,7 +73,7 @@ public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
     {
         if (!Position.ToWorldCoordinates().WithinRange(WotGUtils.ViewportArea.Center() + Main.screenPosition, 3000f))
             return;
-        if (rope is null)
+        if (Rope is null)
             return;
 
         int ofudaVariant = ID % ofudaTextures.Length;
@@ -91,6 +85,9 @@ public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
     {
         PlacedOfudaRenderer.OfudaTarget.Request(240, 240, ID, () =>
         {
+            if (Rope is not RopeHandle rope)
+                return;
+
             ManagedShader overlayShader = ShaderManager.GetShader("IdolOfMadderCrimson.ShrineOfudaShader");
             overlayShader.TrySetParameter("exposure", 1f);
             overlayShader.TrySetParameter("screenSize", WotGUtils.ViewportSize);
@@ -98,9 +95,9 @@ public class TEPlacedOfuda : ModTileEntity, IClientSideTileEntityUpdater
             overlayShader.TrySetParameter("pixelationLevels", new Vector2(75f, 37.5f));
             overlayShader.SetTexture(texture, 1, SamplerState.PointClamp);
 
-            Vector2 offsetToRTCenter = -rope.segments[0].position + WotGUtils.ViewportSize * 0.5f + Main.screenPosition;
+            Vector2 offsetToRTCenter = -rope.Start + WotGUtils.ViewportSize * 0.5f + Main.screenPosition;
             PrimitiveSettings settings = new PrimitiveSettings(WidthFunction, ColorFunction, Shader: overlayShader, OffsetFunction: _ => offsetToRTCenter, UseUnscaledMatrix: true, ProjectionAreaWidth: 240, ProjectionAreaHeight: 240);
-            PrimitiveRenderer.RenderTrail(rope.SegmentPositions, settings, 30);
+            PrimitiveRenderer.RenderTrail(rope.Positions, settings, 30);
         });
         if (PlacedOfudaRenderer.OfudaTarget.TryGetTarget(ID, out RenderTarget2D? target) && target is not null)
         {
