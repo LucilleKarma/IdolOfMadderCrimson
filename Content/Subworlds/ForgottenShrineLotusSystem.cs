@@ -16,8 +16,14 @@ namespace IdolOfMadderCrimson.Content.Subworlds;
 
 public class ForgottenShrineLotusSystem : ModSystem
 {
+    /// <summary>
+    ///     The particle system for the scattering of lotuses across the water.
+    /// </summary>
     private static FastParticleSystem lotusParticleSystem;
 
+    /// <summary>
+    ///     The amount of lotuses that should be spawned in the water overall.
+    /// </summary>
     private static int LotusCount => 2600;
 
     private static readonly Asset<Texture2D> redLotus = ModContent.Request<Texture2D>("IdolOfMadderCrimson/Content/Subworlds/RedLotus");
@@ -33,12 +39,12 @@ public class ForgottenShrineLotusSystem : ModSystem
         }
 
         On_Main.DrawProjectiles += RenderLotuses;
-        ForgottenShrineSystem.OnEnter += ScatterLotusesIfNecessary;
+        ForgottenShrineSystem.OnEnter += ScatterLotuses;
     }
 
     public override void OnModUnload() => Main.QueueMainThreadAction(lotusParticleSystem.Dispose);
 
-    private static void ScatterLotusesIfNecessary()
+    private static void ScatterLotuses()
     {
         for (int i = 0; i < lotusParticleSystem.particles.Length; i++)
             lotusParticleSystem.particles[i].Active = false;
