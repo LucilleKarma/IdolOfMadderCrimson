@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Import tModLoader mod properties -->
+  <Import Project="..\tModLoader.targets" />
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- References -->
+  <ItemGroup>
+    <!-- Include all DLLs in lib/ -->
+    <Reference Include="lib/**/*.dll" />
+  </ItemGroup>
+
+</Project>

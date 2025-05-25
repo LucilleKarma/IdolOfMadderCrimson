@@ -1,0 +1,4 @@
+displayName = Idol of Madder Crimson
+author = Lucille Karma
+version = 1.0.0
+modReferences = NoxusBoss, SubworldLibrary
