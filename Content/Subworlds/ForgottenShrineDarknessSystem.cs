@@ -1,4 +1,6 @@
-﻿using IdolOfMadderCrimson.Content.Subworlds.Generation;
+﻿using System;
+using System.Collections.Generic;
+using IdolOfMadderCrimson.Content.Subworlds.Generation;
 using IdolOfMadderCrimson.Content.Subworlds.Generation.Bridges;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -6,8 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.RenderTargets;
 using NoxusBoss.Core.Utilities;
-using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -68,7 +68,7 @@ public class ForgottenShrineDarknessSystem : ModSystem
                 return;
 
             Main.spriteBatch.ResetToDefault(false);
-            while (GlowActionsQueue.TryDequeue(out Action action))
+            while (GlowActionsQueue.TryDequeue(out Action? action))
                 action();
 
             Main.spriteBatch.End();
