@@ -6,5 +6,5 @@ namespace IdolOfMadderCrimson;
 
 public class IdolOfMadderCrimson : Mod
 {
-
+    // TODO -- Refactor particles maybe?
 }
